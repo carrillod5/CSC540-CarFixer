@@ -1,0 +1,1 @@
+alert('items.js being read')

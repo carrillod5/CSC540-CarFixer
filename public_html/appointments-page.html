@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop Management System</title>
+    <link rel="stylesheet" type="text/css" href="css/appts.css">
+
+    <!-- <style src = "css/appts.css">
+    </style> -->
+</head>
+<div class="page-title">Appointments</div>
+<button class="add-button"  id="addAppointment">New Appointment</button>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Customer</th>
+            <th>Vehicle</th>
+            <th>Service</th>
+            <th>Employee</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Appointment data will be populated here -->
+    </tbody>
+</table>
+<div id="modal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('modal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        New Appointment Info <br><br>
+        <input type="date" id="apptDate" name="apptDate" placeholder="Appointment Date"><br><br>
+        <input type="time" id="apptTime" name="apptTime" placeholder="Appointment Time"><br><br>
+        <input type="text" id="apptIssue" name='apptIssue' placeholder="Appointment Issue"> <br><br>
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>

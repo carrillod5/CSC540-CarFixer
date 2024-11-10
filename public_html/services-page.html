@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop Management System</title>
+    <link rel="stylesheet" type="text/css" href="css/appts.css">
+
+    <!-- <style src = "css/appts.css">
+    </style> -->
+</head>
+<div class="page-title">Services</div>
+<button class="add-button"  id="addService">Add New Service</button>
+<table>
+    <thead>
+        <tr>
+            <th>Service Name</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Service data will be populated here -->
+    </tbody>
+</table>
+<div id="modal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('modal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        New Service Info <br><br>
+        <input type="text" id="serviceName" name="serviceName" placeholder="Service Name"><br><br>
+        <input type="text" id="serviceDescription" name="serviceDescription" placeholder="Service Description"><br><br>
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>
+

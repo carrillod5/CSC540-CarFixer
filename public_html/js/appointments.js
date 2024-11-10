@@ -1,0 +1,1 @@
+alert('appointments.js being read')

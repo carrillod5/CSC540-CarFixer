@@ -1,0 +1,1 @@
+alert('vehicles.js being read')

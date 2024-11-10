@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop Management System</title>
+    <link rel="stylesheet" type="text/css" href="css/appts.css">
+
+    <!-- <style src = "css/appts.css">
+    </style> -->
+</head>
+<div class="page-title">Employees</div>
+<button class="add-button"  id="addEmployee">Add New Employee</button>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Vehicles</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Customer data will be populated here -->
+    </tbody>
+</table>
+
+
+<div id="modal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('modal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        New Employee Info <br><br>
+        <input type="text" id="fname" name="fname" placeholder="First Name"><br><br>
+        <input type="text" id="lname" name="lname" placeholder="Last Name"><br><br>
+        <input type="number" id="phoneNum" name="phoneNum" placeholder="Employee Phone Number"><br><br>
+        <input type="email" id="email" name='email' placeholder="Employee Email"> <br><br>
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>
+

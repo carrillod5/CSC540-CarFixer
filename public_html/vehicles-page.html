@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop Management System</title>
+    <link rel="stylesheet" type="text/css" href="css/appts.css">
+
+    <!-- <style src = "css/appts.css">
+    </style> -->
+</head>
+<div class="page-title">Vehicles</div>
+<button class="add-button" id="addVehicle">Add New Vehicle</button>
+<table>
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Make</th>
+            <th>Year</th>
+            <th>License Plate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Vehicle data will be populated here -->
+    </tbody>
+</table>
+<div id="modal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('modal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        New Car Info <br><br>
+        <input type="text" id="licensePlate" name="licensePlate" placeholder="Plate Number"><br><br>
+        <input type="text" id="carMake" name="carMake" placeholder="Car Make"><br><br>
+        <input type="text" id="carModel" name="carModel" placeholder="Car Model"><br><br>
+        <input type="number" id="carYear" name="carYear" placeholder="Car Year"><br><br>
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>
+

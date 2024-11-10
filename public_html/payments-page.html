@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Shop Management System</title>
+    <link rel="stylesheet" type="text/css" href="css/appts.css">
+
+    <!-- <style src = "css/appts.css">
+    </style> -->
+</head>
+<div class="page-title">Payments</div>
+<button class="add-button"  id="addPayment">Add New Payment</button>
+<table>
+    <thead>
+        <tr>
+            <th>Customer</th>
+            <th>Appointment Date</th>
+            <th>Items</th>
+            <th>Total Charge</th>
+            <th>Due Payment</th>
+            <th>Fully Paid</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Service data will be populated here -->
+    </tbody>
+</table>
+<div id="modal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('modal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        New Payment Info <br><br>
+        <input type="text" id="customerName" name="customerName" placeholder="Customer Name"><br><br>
+        <input type="text" id="apptDate" name="apptDate" placeholder="Appointment Date"><br><br>
+        Items bought <br> <br>
+        <input type="checkbox" name="items"> Windshield <br><br>
+        <input type="checkbox" name="items"> Tires <br><br>
+        <input type="checkbox" name="items"> Headlights <br><br>
+        <input type="checkbox" name="items"> Brakes <br><br>
+
+        
+        <!-- <input type="number" id="itemStock" name="itemStock" placeholder="Item Stock"><br><br> -->
+
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>
+
