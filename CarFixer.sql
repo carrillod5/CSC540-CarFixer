@@ -39,6 +39,9 @@ CREATE TABLE Employees (
     totalAppts INT DEFAULT 0
 );
 
+alter table employees modify column personalPhone  VARCHAR(30);
+alter table employees modify column workPhone  VARCHAR(30);
+
 INSERT INTO Employees (employeeId, firstName, lastName, workPhone, personalPhone, totalAppts) VALUES
 (1, 'Alice', 'Walker', 1234567890, 2345678901, 10),
 (2, 'Bob', 'Smith', 3456789012, 4567890123, 15),
