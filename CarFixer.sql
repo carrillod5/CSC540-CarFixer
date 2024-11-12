@@ -39,6 +39,11 @@ CREATE TABLE Employees (
     totalAppts INT DEFAULT 0
 );
 
+INSERT INTO Employees (employeeId, firstName, lastName, workPhone, personalPhone, totalAppts) VALUES
+(1, 'Alice', 'Walker', 1234567890, 2345678901, 10),
+(2, 'Bob', 'Smith', 3456789012, 4567890123, 15),
+(3, 'Charlie', 'Brown', 5678901234, 6789012345, 20);
+
 CREATE TABLE Items (
     itemName VARCHAR(30) PRIMARY KEY NOT NULL,
     price FLOAT NOT NULL,
