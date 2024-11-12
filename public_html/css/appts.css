@@ -122,3 +122,13 @@ th {
     color: white;
     cursor: pointer;
   }
+
+
+  input[type="text"], 
+  input[type="number"], 
+  input[type="email"] {
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
