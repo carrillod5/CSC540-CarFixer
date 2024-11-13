@@ -43,7 +43,7 @@ CREATE TABLE Employees (
 alter table employees modify column personalPhone  VARCHAR(30);
 alter table employees modify column workPhone  VARCHAR(30);
 
-INSERT INTO Employees (employeeId, firstName, email, lastName, workPhone, personalPhone, totalAppts) VALUES
+INSERT INTO Employees (employeeId, firstName, lastName,email, workPhone, personalPhone, totalAppts) VALUES
 (1, 'Alice', 'Walker','	alicewalker@example.com' ,1234567890, 2345678901, 10),
 (2, 'Bob', 'Smith', 'bobsmith@example.com',3456789012, 4567890123, 15),
 (3, 'Charlie', 'Brown', 'charliebrown@example.com',5678901234, 6789012345, 20);
