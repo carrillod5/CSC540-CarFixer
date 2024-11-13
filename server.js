@@ -7,10 +7,13 @@ const mysql = require('mysql2');
 const port = 3000; // Change port number to something above 1024
 
 
+require('dotenv').config();
+
+const dbPort = process.env.DB_PORT || 3306; 
 
 const connectionObj = {
   host: 'localhost',
-  port:3306,
+  port:dbPort,
   user: 'caruser',
   password: 'Scsucsc540',
   database: 'CarFixer',
