@@ -34,7 +34,7 @@ CREATE TABLE Employees (
     employeeId INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(20) NOT NULL,
     lastName VARCHAR(20) NOT NULL,
-    email VARCHAR(20) NOT NULL, 
+    email VARCHAR(100) NOT NULL, 
     workPhone  VARCHAR(15),
     personalPhone  VARCHAR(15),
     totalAppts INT DEFAULT 0
@@ -43,6 +43,7 @@ CREATE TABLE Employees (
 alter table employees modify column personalPhone  VARCHAR(30);
 alter table employees modify column workPhone  VARCHAR(30);
 
+alter table employees modify column email  VARCHAR(100);
 INSERT INTO Employees (employeeId, firstName, lastName,email, workPhone, personalPhone, totalAppts) VALUES
 (1, 'Alice', 'Walker','	alicewalker@example.com' ,1234567890, 2345678901, 10),
 (2, 'Bob', 'Smith', 'bobsmith@example.com',3456789012, 4567890123, 15),
