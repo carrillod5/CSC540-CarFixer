@@ -124,11 +124,38 @@ th {
   }
 
 
-  input[type="text"], 
-  input[type="number"], 
-  input[type="email"] {
+/* input[type="text"], 
+input[type="number"], 
+input[type="email"].
+input[type="date"],
+input[type="time"] {
     width: 75%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
+}  */
+
+input[type="text"],input[type="number"],input[type="email"]{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 75%;
+}
+
+
+input[type="date"],input[type="time"]{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 75%;
+} 
+
+
+
+select{
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+}
