@@ -11,13 +11,13 @@
 </head>
 <div class="page-title">Items</div>
 <button class="add-button"  id="addItem">Add New Item</button>
-<table>
+<table id = 'itemTable'>
     <thead>
         <tr>
             <th>Item Name</th>
             <th>Price</th>
             <th>Stock</th>
-
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,7 +33,7 @@
         <div id='modalInfo'>
         New Item Info <br><br>
         <input type="text" id="itemName" name="itemName" placeholder="Item Name"><br><br>
-        <input type="text" id="itemPrice" name="itemPrice" placeholder="Item Price"><br><br>
+        <input type="number" id="itemPrice" name="itemPrice" placeholder="Item Price" step="0.01"><br><br>
         <input type="number" id="itemStock" name="itemStock" placeholder="Item Stock"><br><br>
 
 
@@ -43,4 +43,27 @@
         </div>
     </div>
 </div>
+
+<div id="editmodal" class="modal">
+    
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('editmodal')">&times;</div>
+        
+        
+        <div id='editModalInfo'>
+            Edit Item Info <br><br>
+            <input type="text" id="editItemName" name="editItemName" placeholder="Item Name"><br><br>
+            <input type="number" id="editItemPrice" name="editItemPrice" placeholder="Item Price" step="0.01"><br><br>
+            <input type="number" id="editItemStock" name="editItemStock" placeholder="Item Stock"><br><br>
+
+
+            <input type="submit" value="Submit"><br> <br>
+            <input type="button" value="Delete Item">
+
+        </div>
+
+    </div>
+</div>
+
 

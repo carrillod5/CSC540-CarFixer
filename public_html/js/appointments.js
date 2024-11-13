@@ -1,1 +1,1 @@
-alert('appointments.js being read')
+// alert('appointments.js being read')
