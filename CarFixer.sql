@@ -124,11 +124,12 @@ CREATE TABLE Employee_Specialties (
     FOREIGN KEY (serviceName) REFERENCES Services(serviceName) ON DELETE CASCADE
 );
 
+
 -- Services Used Table (Bridge Table between Appointments and Services)
 CREATE TABLE Services_Used (
     appointmentId INT,
     serviceName VARCHAR(20),
     PRIMARY KEY (appointmentId, serviceName),
     FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId) ON DELETE CASCADE,
-    FOREIGN KEY (serviceName) REFERENCES Services(serviceName) ON DELETE SET NULL
+    FOREIGN KEY (serviceName) REFERENCES Services(serviceName) ON DELETE RESTRICT
 );
