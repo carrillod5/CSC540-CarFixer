@@ -11,13 +11,14 @@
 </head>
 <div class="page-title">Employees</div>
 <button class="add-button"  id="addEmployee">Add New Employee</button>
-<table>
+<table id="employeeTable">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Phone</th>
             <th>Email</th>
-            <th>Vehicles</th>
+            <th>Work Phone</th>
+            <th>Personal Phone</th>
+            <th>Total Appointments</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -37,8 +38,10 @@
         New Employee Info <br><br>
         <input type="text" id="fname" name="fname" placeholder="First Name"><br><br>
         <input type="text" id="lname" name="lname" placeholder="Last Name"><br><br>
-        <input type="number" id="phoneNum" name="phoneNum" placeholder="Employee Phone Number"><br><br>
         <input type="email" id="email" name='email' placeholder="Employee Email"> <br><br>
+        <input type="number" id="workPhoneNum" name="workPhoneNum" placeholder="Employee Work Phone Number"><br><br>
+        <input type="number" id="personalPhoneNum" name="personalPhoneNum" placeholder="Employee Personal Phone Number"><br><br>
+
 
         <input type="submit" value="Submit">
 
@@ -46,4 +49,28 @@
         </div>
     </div>
 </div>
+
+
+<div id="editmodal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('editmodal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        Edit Employee Info <br><br>
+        <input type="text" id="editFName" name="editFName" placeholder="First Name"><br><br>
+        <input type="text" id="editLName" name="editLName" placeholder="Last Name"><br><br>
+        <input type="email" id="editEmail" name='editEmail' placeholder="Employee Email"> <br><br>
+        <input type="number" id="editWorkPhoneNum" name="editWorkPhoneNum" placeholder="Employee Work Phone Number"><br><br>
+        <input type="number" id="editPersonalPhoneNum" name="editPersonalPhoneNum" placeholder="Employee Personal Phone Number"><br><br>
+
+        <input type="submit" value="Submit">
+
+
+        </div>
+    </div>
+</div>
+
+
 

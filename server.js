@@ -40,6 +40,25 @@ app.use(express.static(path.join(__dirname, 'public_html')));
 
 
 
+app.get('/getemployees',(req,res)=>{
+
+  pool.query('SELECT * FROM Employees', (err, results) => {
+    if (err) {
+      return console.error('Error retrieving Employees Table:', err.message);
+    } else {
+      console.log('Data in Items Table');
+      console.log(results);
+      return res.json(results)
+    }
+    // Close the connection pool
+    // pool.end();
+  })
+
+
+
+} )
+
+
 app.get('/getitems', (req,res) =>{
 
   pool.query('SELECT * FROM Items', (err, results) => {
