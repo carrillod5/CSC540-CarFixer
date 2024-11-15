@@ -42,7 +42,69 @@ const pool = mysql.createPool(connectionObj);
 // Serve static files from the 'public_html' directory
 app.use(express.static(path.join(__dirname, 'public_html')));
 
+app.use(express.json());
 
+
+app.get('/getcars',(req,res) =>{
+  console.log('getting cars')
+
+  pool.query(`SELECT Cars.*, customerId ,CONCAT(firstName, ' ',lastName) AS customerName
+              FROM Cars
+              JOIN Customers ON OwnerId = customerId;`, (err, results) => {
+                if (err) {
+                  return console.error('Error retrieving Items Table:', err.message);
+                } 
+                else {
+                  console.log('Data in Cars Table joining customer name');
+                  console.log(results);
+                  return res.json({results})
+                }
+                })
+})
+
+app.post('/addcar',(req,res) =>{
+  console.log(req.body)
+  licensePlate = req.body.licensePlate
+  carMake = req.body.carMake
+  carModel = req.body.carModel
+  carYear = parseInt(req.body.carYear)
+  ownerId = parseInt(req.body.ownerId)
+
+  pool.query(`SELECT * FROM Cars WHERE licensePlate='${licensePlate}'`, (err, results) => {
+    if (err) {
+      return res.status(404).send('Error retrieving Cars Table:', err.message);
+    } else {
+      if(results.length>0){
+        return res.json({message:'existing'})
+
+      }
+      else{
+        pool.query(`INSERT INTO Cars () 
+          VALUES ('${licensePlate}','${carMake}','${carModel}',${carYear},${ownerId})
+          `,(err,results)=>{
+            if (err){
+              return res.status(404).send('error inserting data '+err)
+            }
+            else{
+              console.log('data inserted')
+              return res.json({message:'success'})
+            }
+
+
+
+        })
+
+      }
+    }
+    // Close the connection pool
+    // pool.end();
+  })
+
+
+  
+
+
+})
 
 app.get('/getemployees',(req,res)=>{
 

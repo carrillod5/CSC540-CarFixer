@@ -14,12 +14,15 @@
 <table id="employeeTable">
     <thead>
         <tr>
+            <th>Employee Id</th>
             <th>Name</th>
             <th>Email</th>
             <th>Work Phone</th>
             <th>Personal Phone</th>
             <th>Total Appointments</th>
-            <th>Actions</th>
+            <th>Edit Employee Info</th>
+            <th>Edit Employee Services</th>
+
         </tr>
     </thead>
     <tbody>
@@ -71,6 +74,25 @@
         </div>
     </div>
 </div>
+
+
+<div id="editservices" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('editservices')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        Edit Employee Services Info <br><br>
+        <div id="servicesList"></div>
+        <input id='updateServices'type="button" value="Edit Services for Employee">
+
+
+        </div>
+    </div>
+</div>
+
+
 
 
 
