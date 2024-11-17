@@ -69,16 +69,25 @@ fetch('/getcustomers', {
 })
     .then(response => response.json())  // Parsing the JSON response
     .then(customers => {
+        console.log(customers)
 
         const customerSelect = document.getElementById("customers");
         const editOwnerSelect = document.getElementById('editOwner')
 
         customers.forEach(customer =>{
-            const option = document.createElement('option');
-            option.value = customer.customerId
-            option.textContent = customer.customerId+". "+customer.firstName+" "+customer.lastName
-            customerSelect.appendChild(option);
-            editOwnerSelect.appendChild(option);
+
+            // in adding the vehicle popup
+            const option1 = document.createElement('option');
+            option1.value = customer.customerId
+            option1.textContent = customer.customerId+". "+customer.firstName+" "+customer.lastName
+            customerSelect.appendChild(option1);
+
+
+            // in editing the vehicle popup
+            const option2 = document.createElement('option');
+            option2.value = customer.customerId
+            option2.textContent = customer.customerId+". "+customer.firstName+" "+customer.lastName
+            editOwnerSelect.appendChild(option2);
 
         }
 
