@@ -1,7 +1,3 @@
-
-// window.onload = function(){
-
-
 fetch('/getcustomers', {
     method: 'GET',
 })
@@ -46,10 +42,32 @@ fetch('/getcustomers', {
                 document.getElementById('editEmail').value = customer.email
                 document.getElementById('editAddress').value = customer.address
 
+                const editCustomer = document.getElementById('editCustomer')
+                editCustomer.onclick = function(){
+                    alert("editing customer with id: "+customer.customerId)
+    
+
+                    // ADD NEW FETCH HERE IN EDITING CUSTOMER
+                }
+    
+                const deleteCustomer = document.getElementById('deleteCustomer')
+                deleteCustomer.onclick = function(){
+                    alert("delete customer with id: "+customer.customerId)
+    
+                    // ADD NEW FETCH HERE IN DELETING CUSTOMER
+
+                }
+    
+
             };
 
             // Append the Edit button to the last cell (cellActions)
             cellActions.appendChild(editButton);
+
+
+
+
+
                 
             
         });
@@ -59,6 +77,12 @@ fetch('/getcustomers', {
     .catch(error => {
         console.error('Error sending data:', error);
     });
-// }
+
+const addNewCustomer = document.getElementById('addNewCustomer');
+addNewCustomer.onclick = function(){
+    alert("new customer made")
+
+}
+
 
 

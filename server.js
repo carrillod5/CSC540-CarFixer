@@ -35,12 +35,23 @@ const pool = mysql.createPool(connectionObj);
 //   // pool.end();
 // });
 
+
+
+
+
+// Serve static files from the 'public_html' directory
+app.use(express.static(path.join(__dirname, 'public_html')));
+
+app.use(express.json());
+
+
+
 // Add Customer Endpoint
 app.post('/addcustomer', (req, res) => {
   const { firstName, lastName, phone, email, address } = req.body;
   const query = `INSERT INTO Customers (firstName, lastName, phone, email, address) VALUES (?, ?, ?, ?, ?)`;
 
-  connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
+  pool.query(query, [firstName, lastName, phone, email, address], (err, results) => {
       if (err) {
           console.error('Error inserting customer:', err);
           res.status(500).send('Failed to add customer.');
@@ -49,13 +60,6 @@ app.post('/addcustomer', (req, res) => {
       }
   });
 });
-
-
-
-// Serve static files from the 'public_html' directory
-app.use(express.static(path.join(__dirname, 'public_html')));
-
-app.use(express.json());
 
 
 app.get('/getemployeeservices',(req,res)=>{
