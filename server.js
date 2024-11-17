@@ -35,7 +35,20 @@ const pool = mysql.createPool(connectionObj);
 //   // pool.end();
 // });
 
+// Add Customer Endpoint
+app.post('/addcustomer', (req, res) => {
+  const { firstName, lastName, phone, email, address } = req.body;
+  const query = `INSERT INTO Customers (firstName, lastName, phone, email, address) VALUES (?, ?, ?, ?, ?)`;
 
+  connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
+      if (err) {
+          console.error('Error inserting customer:', err);
+          res.status(500).send('Failed to add customer.');
+      } else {
+          res.status(200).json({ message: 'Customer added successfully!' });
+      }
+  });
+});
 
 
 
