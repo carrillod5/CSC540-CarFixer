@@ -21,6 +21,9 @@ fetch('/getemployees', {
 
             const cellActions2 = newRow.insertCell(7);
 
+            const cellActions3 = newRow.insertCell(8);
+
+
 
             // Fill in the cells with data
             employeeId.textContent = employee.employeeId;
@@ -58,14 +61,25 @@ fetch('/getemployees', {
                 openModal('editservices')
 
                 getServices(employee);
+                // employeeServices = getEmployeeServices(employee)
+            };
 
+            const viewServices = document.createElement("button");
+            viewServices.textContent = "View Services";
+            viewServices.onclick = function() {
+                // Add logic to handle the edit action
+                // alert("for "+ customer.firstName+" "+customer.lastName)
+                openModal('viewservices')
+                viewEmployeeServices(employee)
 
+                // getServices(employee);
+                // employeeServices = getEmployeeServices(employee)
             };
 
             // Append the buttons to the last cell (cellActions)
             cellActions.appendChild(editButton);
-
             cellActions2.appendChild(editServices);
+            cellActions3.appendChild(viewServices);
 
                 
             
@@ -90,27 +104,39 @@ function getServices(employee){
             const servicesList = document.getElementById('servicesList');
             servicesList.innerHTML = '';  // Clear previous checkboxes
 
-            // Create checkboxes based on services returned from the server
-            data.forEach(service => {
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.id = service.serviceName;
-                checkbox.name = 'services';
-                checkbox.value = service.serviceName;
+            getEmployeeServices(employee)
+            .then(employeeServices => {
+                console.log('Employee services:', employeeServices);
+                // Now you can use employeeServices here
 
-                // Label for the checkbox
-                const label = document.createElement('label');
-                label.htmlFor = service.serviceName;
-                label.textContent = service.serviceName;
+                // Create checkboxes based on services returned from the server
+                data.forEach(service => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = service.serviceName;
+                    checkbox.name = 'services';
+                    checkbox.value = service.serviceName;
 
-                // Append the checkbox and label to the services list
-                servicesList.appendChild(checkbox);
-                servicesList.appendChild(label);
-                servicesList.appendChild(document.createElement('br')); // Line break
-                servicesList.appendChild(document.createElement('br')); // Line break
+                    // Check if the service is in the employeeServices list
+                    if (employeeServices.includes(service.serviceName)) {
+                        checkbox.checked = true;  // Pre-check the checkbox if the employee uses the service
+                    }
 
-                document.getElementById('updateServices').onclick = function(){
-                    alert('updating services for '+employee.firstName+" "+employee.lastName)
+                    // Label for the checkbox
+                    const label = document.createElement('label');
+                    label.htmlFor = service.serviceName;
+                    label.textContent = service.serviceName;
+
+                    // Append the checkbox and label to the services list
+                    servicesList.appendChild(checkbox);
+                    servicesList.appendChild(label);
+                    servicesList.appendChild(document.createElement('br')); // Line break
+                    servicesList.appendChild(document.createElement('br')); // Line break
+                });
+
+                // Handling the "updateServices" button click event
+                document.getElementById('updateServices').onclick = function() {
+                    alert('Updating services for ' + employee.firstName + " " + employee.lastName);
 
                     // Collect the checked checkboxes
                     const checkedServices = [];
@@ -120,20 +146,100 @@ function getServices(employee){
                         checkedServices.push(checkbox.value);
                     });
 
-                    // Log the selected services or send them to the server
-                    console.log(`Employee:${employee.employeeId}  Selected services: ${checkedServices}`);
-
-                                
-
-                }
+                    // Log or send the selected services to the server
+                    updateServices(employee, checkedServices);
+                };
+            })
+            .catch(error => {
+                console.error('Error getting employee services:', error);
             });
-
-            
+          
     
         })
         .catch(error => {
             console.error('Error sending data:', error);
         });
+
+
+}
+
+function updateServices(employee,services){
+    console.log(`Employee:${employee.employeeId}  Selected services: ${services}`);
+
+    fetch('/updateemployeeservices', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Indicates that the data is in JSON format
+        },
+        body: JSON.stringify({employeeId:employee.employeeId,services:services}),
+        })
+        .then(response => response.json())  // Parsing the JSON response
+        .then(data => {
+            console.log('Response from server:', data);
+            
+            if(data.message=='success'){
+                alert('services updated for '+employee.firstName+' '+employee.lastName)
+            }
+    
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+
+}
+function getEmployeeServices(employee) {
+    // Return the fetch promise to ensure it resolves with employee services data
+    return fetch(`/getemployeeservices?employeeId=${employee.employeeId}`, {
+        method: 'GET',
+    })
+    .then(response => response.json())  // Parsing the JSON response
+    .then(data => {
+        console.log('Response from server:', data);
+        // Map the data to extract service names and return them
+        return data.map(item => item.serviceName);
+    })
+    .catch(error => {
+        console.error('Error sending data:', error);
+        // Optionally return an empty array in case of error
+        return [];
+    });
+}
+
+function viewEmployeeServices(employee){
+
+    getEmployeeServices(employee)
+    .then(employeeServices => {
+        console.log('Employee services:', employeeServices);
+
+        document.getElementById('viewheader').innerHTML=`Services offered by ${employee.firstName} ${employee.lastName}`
+    
+        const viewServicesList = document.getElementById('offeredservices');
+        viewServicesList.innerText = ''; // This clears the existing content
+
+        if (employeeServices.length==0){
+            viewServicesList.innerHTML = `${employee.firstName} ${employee.lastName} has no offered services at the moment`
+            return
+        }
+        // document.getElementById('offeredservices').innerHTML=`Services offered by ${employee.firstName} ${employee.lastName}`
+
+        
+
+        viewServicesHTML = ''
+       // Loop through each service and create a new element with a line break
+        employeeServices.forEach(service => {
+            console.log(service)
+
+            viewServicesHTML+= `${service} <br><br>`
+        });   
+
+        viewServicesList.innerHTML = viewServicesHTML;
+            
+    
+    })
+    .catch(error => {
+        console.error('Error getting employee services:', error);
+    });
+  
 
 
 }

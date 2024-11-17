@@ -45,6 +45,78 @@ app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.json());
 
 
+app.get('/getemployeeservices',(req,res)=>{
+  employeeId = req.query.employeeId
+
+  pool.query(`SELECT serviceName 
+    FROM Employee_Specialties 
+    WHERE employeeId =${employeeId}`,(err, results)=> {
+    if (err) {
+        console.error('Error getting', err);
+        return;
+    }
+    console.log(results)
+    return res.json(results)
+
+  });
+  
+
+
+
+})
+
+app.post('/updateemployeeservices',(req,res)=>{
+  console.log(req.body)
+  employeeId = req.body.employeeId
+  services = req.body.services;
+
+
+  pool.query(`delete from employee_specialties where employeeId=${employeeId}`,(err,results)=>{
+    if (err) {
+        console.error('Error deleting data:', err);
+        return;
+    }
+    else{
+      if (services.length==0){
+        return res.json({message:'success'})
+      }
+
+      const values = services.map(service => [employeeId, service]);
+
+      const sql = `INSERT INTO Employee_Specialties (employeeId, serviceName) VALUES ?`;
+
+      pool.query(sql, [values], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return;
+        }
+        return res.json({message:'success'})
+
+      });
+          
+
+    }
+
+  }
+  
+  )
+
+  // const values = services.map(service => [employeeId, service]);
+
+  // const sql = `INSERT INTO Employee_Specialties (employeeId, serviceName) VALUES ?`;
+
+  // pool.query(sql, [values], (err, results) => {
+  //   if (err) {
+  //       console.error('Error inserting data:', err);
+  //       return;
+  //   }
+  //   return res.json({message:'success'})
+
+  // });
+
+
+})
+
 app.get('/getcars',(req,res) =>{
   console.log('getting cars')
 
