@@ -1,10 +1,23 @@
 # CSC540-CarFixer
-Make sure all files are saved with the correct .php extension
+# Setting up the Node.js environement
+Mysql2 module is the module/library that will allow you to interface Node.js and MySQL server. 
+It can be installed locally in your project directory (you can also install it globally on your 
+machine - ask if interested). 
+1) Download and unpack the zip file provided with this assignment. 
+2) Open Terminal/Command shell 
+3) Navigate to the directory where you unpacked the zip. (using cd command) 
+4) Run the following command 
+npm install mysql2@latest 
 
-Verify that the pages folder exists and contains all the required files
+# For Mysql Workbench
 
-Check file permissions (though this usually isn't an issue on Windows)
+Setup the Mysql account in order to connect the database 
+# Run the Node.js
 
-Restart your WAMP server
+locate the folder CSC540-Carfixer
 
-Access the site through: http://localhost/Carfixer/
+# Run
+
+node server.js 
+
+Access the site through: http://localhost:3000
