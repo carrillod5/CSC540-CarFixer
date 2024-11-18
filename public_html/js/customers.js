@@ -3,21 +3,19 @@ fetch('/getcustomers', {
 })
     .then(response => response.json())  // Parsing the JSON response
     .then(data => {
-        // alert("customers data received")
         console.log('Response from server:', data);
 
         customerTable = document.getElementById('customerTable').getElementsByTagName("tbody")[0];
 
         // If `data` is an array of customers
         data.forEach(customer => {
-            const newRow = customerTable.insertRow();
-            const cellId = newRow.insertCell(0);
-            const cellName = newRow.insertCell(1);
-            const cellPhone = newRow.insertCell(2);
-            const cellEmail = newRow.insertCell(3);
-            const cellAddress = newRow.insertCell(4);
-            // const cellVehicles = newRow.insertCell(5);
-            const cellActions = newRow.insertCell(5);
+             newRow = customerTable.insertRow();
+             cellId = newRow.insertCell(0);
+             cellName = newRow.insertCell(1);
+             cellPhone = newRow.insertCell(2);
+             cellEmail = newRow.insertCell(3);
+             cellAddress = newRow.insertCell(4);
+             cellActions = newRow.insertCell(5);
 
             // Fill in the cells with data
             cellId.textContent = customer.customerId;
@@ -25,64 +23,94 @@ fetch('/getcustomers', {
             cellPhone.textContent = customer.phone;
             cellEmail.textContent = customer.email;
             cellAddress.textContent = customer.address;
-            // cellVehicles.textContent = customer.vehicles || "N/A";
-
 
             // Create an Edit button
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
             editButton.onclick = function() {
-                // Add logic to handle the edit action
-                // alert("for "+ customer.firstName+" "+customer.lastName)
-                openModal('editmodal')
-                document.getElementById('editFName').value = customer.firstName
-                document.getElementById('editLName').value = customer.lastName
-                document.getElementById('editFName').value = customer.firstName
-                document.getElementById('editPhoneNum').value = customer.phone
-                document.getElementById('editEmail').value = customer.email
-                document.getElementById('editAddress').value = customer.address
+                openModal('editmodal');
+                document.getElementById('editFName').value = customer.firstName;
+                document.getElementById('editLName').value = customer.lastName;
+                document.getElementById('editPhoneNum').value = customer.phone;
+                document.getElementById('editEmail').value = customer.email;
+                document.getElementById('editAddress').value = customer.address;
 
-                const editCustomer = document.getElementById('editCustomer')
-                editCustomer.onclick = function(){
-                    alert("editing customer with id: "+customer.customerId)
-    
+                const editCustomer = document.getElementById('editCustomer');
+                editCustomer.onclick = function() {
+                    const updatedCustomer = {
+                        customerId: customer.customerId,
+                        firstName: document.getElementById('editFName').value,
+                        lastName: document.getElementById('editLName').value,
+                        phone: document.getElementById('editPhoneNum').value,
+                        email: document.getElementById('editEmail').value,
+                        address: document.getElementById('editAddress').value,
+                    };
 
-                    // ADD NEW FETCH HERE IN EDITING CUSTOMER
-                }
-    
-                const deleteCustomer = document.getElementById('deleteCustomer')
-                deleteCustomer.onclick = function(){
-                    alert("delete customer with id: "+customer.customerId)
-    
-                    // ADD NEW FETCH HERE IN DELETING CUSTOMER
+                    fetch('/updatecustomer', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(updatedCustomer),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert('Customer updated successfully!');
+                            closeModal('editmodal');
+                            location.reload(); // Reload to reflect changes
+                        })
+                        .catch(error => console.error('Error updating customer:', error));
+                };
 
-                }
-    
-
+                const deleteCustomer = document.getElementById('deleteCustomer');
+                deleteCustomer.onclick = function() {
+                    fetch(`/deletecustomer/${customer.customerId}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert('Customer deleted successfully!');
+                            closeModal('editmodal');
+                            location.reload(); // Reload to reflect changes
+                        })
+                        .catch(error => console.error('Error deleting customer:', error));
+                };
             };
 
             // Append the Edit button to the last cell (cellActions)
             cellActions.appendChild(editButton);
-
-
-
-
-
-                
-            
         });
-
-
     })
     .catch(error => {
-        console.error('Error sending data:', error);
+        console.error('Error fetching customers:', error);
     });
 
 const addNewCustomer = document.getElementById('addNewCustomer');
-addNewCustomer.onclick = function(){
-    alert("new customer made")
+addNewCustomer.onclick = function() {
+    const newCustomer = {
+        firstName: document.getElementById('fname').value,
+        lastName: document.getElementById('lname').value,
+        phone: document.getElementById('phoneNum').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+    };
 
-}
-
-
-
+    fetch('/addcustomer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newCustomer),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('New customer added successfully!');
+            closeModal('modal');
+            location.reload(); // Reload to reflect changes
+        })
+        .catch(error => {
+            console.error('Error adding new customer:', error);
+            alert('Failed to add customer. Please try again.');
+        });
+};

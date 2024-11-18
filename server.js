@@ -20,9 +20,6 @@ const connectionObj = {
   database: 'CarFixer',
   connectionLimit:  10  
 };
-
-const pool = mysql.createPool(connectionObj);
-
 // // Query to get all tables in the database
 // pool.query('SELECT * FROM Customers', (err, results) => {
 //   if (err) {
@@ -35,31 +32,70 @@ const pool = mysql.createPool(connectionObj);
 //   // pool.end();
 // });
 
+const pool = mysql.createPool(connectionObj);
+// Add Customer Endpoint
+app.post('/addcustomer', (req, res) => {
+  const { firstName, lastName, phone, email, address } = req.body;
 
+  // Log the request body for debugging
+  console.log('Request Body:', req.body);
 
+  const query = `
+      INSERT INTO Customers (firstName, lastName, phone, email, address) 
+      VALUES (?, ?, ?, ?, ?)`;
 
+  connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
+      if (err) {
+          console.error('Database Error:', err); // Log the error
+          res.status(500).send(err); // Send the error to the client
+      } else {
+          console.log('Insert Results:', results); // Log successful insert
+          res.status(200).json({ message: 'Customer added successfully!' });
+      }
+  });
+});
+
+// app.post('/addcustomer', (req, res) => {
+//     const { firstName, lastName, phone, email, address } = req.body;
+//     const query = `INSERT INTO Customers (firstName, lastName, phone, email, address) VALUES (?, ?, ?, ?, ?)`;
+
+//     connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
+//         if (err) {
+//             console.error('Error inserting customer:', err);
+//             res.status(500).send('Failed to add customer.');
+//         } else {
+//             res.status(200).json({ message: 'Customer added successfully!' });
+//         }
+//     });
+// });
+
+// update customer
+app.post('/updatecustomer', (req, res) => {
+  const { customerId, firstName, lastName, phone, email, address } = req.body;
+  const query = `
+      UPDATE Customers 
+      SET firstName = ?, lastName = ?, phone = ?, email = ?, address = ? 
+      WHERE customerId = ?`;
+  connection.query(query, [firstName, lastName, phone, email, address, customerId], (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json({ message: 'Customer updated successfully!' });
+  });
+});
+// Delete customer
+
+app.delete('/deletecustomer/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM Customers WHERE customerId = ?`;
+  connection.query(query, [id], (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json({ message: 'Customer deleted successfully!' });
+  });
+});
 
 // Serve static files from the 'public_html' directory
 app.use(express.static(path.join(__dirname, 'public_html')));
 
 app.use(express.json());
-
-
-
-// Add Customer Endpoint
-app.post('/addcustomer', (req, res) => {
-  const { firstName, lastName, phone, email, address } = req.body;
-  const query = `INSERT INTO Customers (firstName, lastName, phone, email, address) VALUES (?, ?, ?, ?, ?)`;
-
-  pool.query(query, [firstName, lastName, phone, email, address], (err, results) => {
-      if (err) {
-          console.error('Error inserting customer:', err);
-          res.status(500).send('Failed to add customer.');
-      } else {
-          res.status(200).json({ message: 'Customer added successfully!' });
-      }
-  });
-});
 
 
 app.get('/getemployeeservices',(req,res)=>{
