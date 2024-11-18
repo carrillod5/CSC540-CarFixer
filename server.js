@@ -126,6 +126,44 @@ app.get('/getemployeeservices',(req,res)=>{
 
 
 })
+// add new employee
+app.post('/addemployee', (req, res) => {
+  const { firstName, lastName, email, workPhone, personalPhone } = req.body;
+  const query = `
+      INSERT INTO Employees (firstName, lastName, email, workPhone, personalPhone)
+      VALUES (?, ?, ?, ?, ?)`;
+  pool.query(query, [firstName, lastName, email, workPhone, personalPhone], (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).json({ message: 'Employee added successfully!' });
+  });
+});
+
+// update employee information
+app.post('/updateemployee', (req, res) => {
+  const { employeeId, firstName, lastName, email, workPhone, personalPhone } = req.body;
+
+  const query = `
+      UPDATE Employees 
+      SET firstName = ?, lastName = ?, email = ?, workPhone = ?, personalPhone = ? 
+      WHERE employeeId = ?`;
+
+  pool.query(query, [firstName, lastName, email, workPhone, personalPhone, employeeId], (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json({ message: 'Employee updated successfully!' });
+  });
+});
+
+
+// delete employee
+
+app.delete('/deleteemployee/:id', (req, res) => {
+  const { id } = req.params;
+  const query = `DELETE FROM Employees WHERE employeeId = ?`;
+  pool.query(query, [id], (err, results) => {
+      if (err) return res.status(500).send(err);
+      res.json({ message: 'Employee deleted successfully!' });
+  });
+});
 
 app.post('/updateemployeeservices',(req,res)=>{
   console.log(req.body)
