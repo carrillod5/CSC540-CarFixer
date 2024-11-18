@@ -33,18 +33,30 @@ const connectionObj = {
 // });
 
 const pool = mysql.createPool(connectionObj);
+// Serve static files from the 'public_html' directory
+app.use(express.static(path.join(__dirname, 'public_html')));
+app.use(express.json());
+
+
+
+
 // Add Customer Endpoint
 app.post('/addcustomer', (req, res) => {
   const { firstName, lastName, phone, email, address } = req.body;
 
   // Log the request body for debugging
   console.log('Request Body:', req.body);
+  // firstName = req.body.firstName;
+  // lastName = req.body.lastName;
+  // phone = req.body.phone;
+  // email = req.body.email;
+  // address = req.body.address;
 
   const query = `
       INSERT INTO Customers (firstName, lastName, phone, email, address) 
       VALUES (?, ?, ?, ?, ?)`;
 
-  connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
+  pool.query(query, [firstName, lastName, phone, email, address], (err, results) => {
       if (err) {
           console.error('Database Error:', err); // Log the error
           res.status(500).send(err); // Send the error to the client
@@ -76,7 +88,7 @@ app.post('/updatecustomer', (req, res) => {
       UPDATE Customers 
       SET firstName = ?, lastName = ?, phone = ?, email = ?, address = ? 
       WHERE customerId = ?`;
-  connection.query(query, [firstName, lastName, phone, email, address, customerId], (err, results) => {
+  pool.query(query, [firstName, lastName, phone, email, address, customerId], (err, results) => {
       if (err) return res.status(500).send(err);
       res.json({ message: 'Customer updated successfully!' });
   });
@@ -86,16 +98,13 @@ app.post('/updatecustomer', (req, res) => {
 app.delete('/deletecustomer/:id', (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM Customers WHERE customerId = ?`;
-  connection.query(query, [id], (err, results) => {
+  pool.query(query, [id], (err, results) => {
       if (err) return res.status(500).send(err);
       res.json({ message: 'Customer deleted successfully!' });
   });
 });
 
-// Serve static files from the 'public_html' directory
-app.use(express.static(path.join(__dirname, 'public_html')));
 
-app.use(express.json());
 
 
 app.get('/getemployeeservices',(req,res)=>{

@@ -9,13 +9,13 @@ fetch('/getcustomers', {
 
         // If `data` is an array of customers
         data.forEach(customer => {
-             newRow = customerTable.insertRow();
-             cellId = newRow.insertCell(0);
-             cellName = newRow.insertCell(1);
-             cellPhone = newRow.insertCell(2);
-             cellEmail = newRow.insertCell(3);
-             cellAddress = newRow.insertCell(4);
-             cellActions = newRow.insertCell(5);
+            newRow = customerTable.insertRow();
+            cellId = newRow.insertCell(0);
+            cellName = newRow.insertCell(1);
+            cellPhone = newRow.insertCell(2);
+            cellEmail = newRow.insertCell(3);
+            cellAddress = newRow.insertCell(4);
+            cellActions = newRow.insertCell(5);
 
             // Fill in the cells with data
             cellId.textContent = customer.customerId;
@@ -27,7 +27,7 @@ fetch('/getcustomers', {
             // Create an Edit button
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
-            editButton.onclick = function() {
+            editButton.onclick = function () {
                 openModal('editmodal');
                 document.getElementById('editFName').value = customer.firstName;
                 document.getElementById('editLName').value = customer.lastName;
@@ -36,7 +36,7 @@ fetch('/getcustomers', {
                 document.getElementById('editAddress').value = customer.address;
 
                 const editCustomer = document.getElementById('editCustomer');
-                editCustomer.onclick = function() {
+                editCustomer.onclick = function () {
                     const updatedCustomer = {
                         customerId: customer.customerId,
                         firstName: document.getElementById('editFName').value,
@@ -61,7 +61,7 @@ fetch('/getcustomers', {
                 };
 
                 const deleteCustomer = document.getElementById('deleteCustomer');
-                deleteCustomer.onclick = function() {
+                deleteCustomer.onclick = function () {
                     fetch(`/deletecustomer/${customer.customerId}`, {
                         method: 'DELETE',
                     })
@@ -84,7 +84,7 @@ fetch('/getcustomers', {
     });
 
 const addNewCustomer = document.getElementById('addNewCustomer');
-addNewCustomer.onclick = function() {
+addNewCustomer.onclick = function () {
     const newCustomer = {
         firstName: document.getElementById('fname').value,
         lastName: document.getElementById('lname').value,

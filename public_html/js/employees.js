@@ -50,6 +50,17 @@ fetch('/getemployees', {
                 document.getElementById('editWorkPhoneNum').value = employee.workPhone
                 document.getElementById('editPersonalPhoneNum').value = employee.personalPhone
 
+
+                
+                // EDITING EMPLOYEE GOES HERE
+                document.getElementById('editemployee').onclick = function(){
+                    alert("editing employee with id "+employee.employeeId)
+
+                    // FETCH CODE GOES HERE
+                    // this is where you communicate with the server
+                    
+            }
+
             };
 
             // Create an Edit Services button
@@ -81,6 +92,9 @@ fetch('/getemployees', {
             cellActions2.appendChild(editServices);
             cellActions3.appendChild(viewServices);
 
+
+
+
                 
             
         });
@@ -90,6 +104,17 @@ fetch('/getemployees', {
     .catch(error => {
         console.error('Error sending data:', error);
     });
+
+// ADDING NEW EMPLOYEE GOES HERE
+addNewEmployee = document.getElementById('addNewEmployee')
+addNewEmployee.onclick = function(){ 
+    alert("adding new employee")
+    // NEW CODE GOES HERE
+    // FETCH CODE GOES HERE IN ADDING EMPLOYEE
+
+
+
+}
 
 function getServices(employee){
 
