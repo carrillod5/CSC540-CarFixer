@@ -17,7 +17,7 @@ const connectionObj = {
   port:dbPort,
   user: 'caruser',
   password: 'Scsucsc540',
-  database: 'CarFixer',
+  database: 'CarFixerUpdated',
   connectionLimit:  10  
 };
 // // Query to get all tables in the database
@@ -39,6 +39,27 @@ app.use(express.json());
 
 
 
+
+// getting employees who offer a certain service
+app.get('/getserviceemployees',(req,res) =>{
+  service = req.query.service
+
+  query = `SELECT DISTINCT firstName,lastName,employeeId 
+    FROM Employee_Specialties 
+    JOIN Employees USING (employeeId)
+        WHERE serviceName='${service}' `
+
+  pool.query(query, (err, results) => {
+    if (err) {
+        console.error('Database Error:', err); // Log the error
+        res.status(500).send(err); // Send the error to the client
+    } else {
+        res.status(200).json(results);
+    }
+});
+
+}
+)
 
 // Add Customer Endpoint
 app.post('/addcustomer', (req, res) => {
