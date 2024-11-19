@@ -83,8 +83,7 @@ fetch('/getcustomers', {
         console.error('Error fetching customers:', error);
     });
 
-const addNewCustomer = document.getElementById('addNewCustomer');
-addNewCustomer.onclick = function () {
+document.getElementById('addNewCustomer').onclick = function () {
     const newCustomer = {
         firstName: document.getElementById('fname').value,
         lastName: document.getElementById('lname').value,

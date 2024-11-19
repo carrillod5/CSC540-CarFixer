@@ -44,6 +44,65 @@ fetch('/getcars', {
                 document.getElementById('editCarYear').value = car.carYear
                 document.getElementById('editOwner').value = car.ownerId
 
+                document.getElementById('editcar').onclick = function(){
+                    alert('editing car '+car.licensePlate);
+
+                    carData = {
+                        licensePlate: car.licensePlate,
+                        newLicensePlate: document.getElementById('editState').value+"-"+document.getElementById('editLicensePlate').value,
+                        carMake: document.getElementById('editCarMake').value,
+                        carModel: document.getElementById('editCarModel').value,
+                        carYear: document.getElementById('editCarYear').value,
+                        ownerId: document.getElementById('editOwner').value
+                    }
+
+                    fetch('/editcar', {
+                        method: 'POST',  // Use POST to add data to the server
+                        headers: {
+                            'Content-Type': 'application/json'  // Inform server we're sending JSON data
+                        },
+                        body: JSON.stringify(carData)})
+                    .then(response => response.json())
+                    .then(data =>{
+                        console.log(data)
+                        if (data.message=='success'){
+                            alert("car edited")
+                            location.reload()
+            
+                        }
+                        else{
+                            alert('logical error')
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error sending data:', error);
+                    });
+                        
+
+
+                };
+
+                document.getElementById('deletecar').onclick = function(){
+                    alert('deleting car '+car.licensePlate)
+                    fetch(`/deletecar/${car.licensePlate}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data)
+                            if (data.message=='success'){
+                                alert('Vehicle deleted successfully!');
+                                closeModal('editmodal');
+                                location.reload(); // Reload to reflect changes
+                        
+                            }
+                            else{
+                                alert('logical error');
+                            }
+                        })
+                        .catch(error => console.error('Error deleting car:', error));
+                }
+
             };
 
             // Append the Edit button to the last cell (cellActions)
@@ -141,6 +200,7 @@ function addCar(){
         .then(data =>{
             if (data.message=='success'){
                 alert("car added to database")
+                location.reload();
 
             }
             else if(data.message=='existing'){

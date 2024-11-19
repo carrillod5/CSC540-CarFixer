@@ -59,25 +59,31 @@ fetch('/getservices', {
 
         serviceOption.addEventListener('change', event => {
             const selectedValue = event.target.value;
-            alert(`You selected: ${selectedValue}`);
+            // alert(`You selected: ${selectedValue}`);
             employeeOption = document.getElementById('employees')
-
+            // Clear all existing options
 
             fetch(`/getserviceemployees?service=${selectedValue}`, {
                 method: 'GET',
                 })
             .then(response => response.json())  // Parsing the JSON response
             .then(employees => {
+                employeeOption.innerHTML = ''; 
+
 
 
                 if(employees.length==0){
                     alert(`No Employee assigned to this service!`)
+                    document.getElementById('items').style.display='none'
+                    employeeOption.style='display: none;'
+                    serviceOption.value=""
                     return
                 }
 
-                employeeOption.style.display='block'
-                employeeOption.style.margin = '0 auto'; // Center horizontally
+                employeeOption.style='display: block; margin: 0 auto;'
     
+                document.getElementById('items').style='display:block; margin: 0 auto; align:center;'
+
 
                 employees.forEach(employee => {
 
@@ -109,4 +115,45 @@ fetch('/getservices', {
     .catch(error => {
         console.error('Error sending data:', error);
     });
+
+    fetch('/getitems', {
+        method: 'GET',
+        })
+        .then(response => response.json())  // Parsing the JSON response
+        .then(data => {
+            console.log('Response from server:', data);
+
+            itemCheckbox = document.getElementById('items')
+            data.forEach(item =>{
+
+                if (item.stock==0){
+                    return
+                }
+                    // Create a label for the checkbox
+                const label = document.createElement('label');
+                label.textContent = item.itemName;
+                label.htmlFor = item.itemName;
+
+                // Create the checkbox input
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = item.itemName;
+                checkbox.name = item.itemName;
+                checkbox.value = item.itemName;
+
+                // Append the checkbox and label to the items div
+                itemCheckbox.appendChild(label);
+                itemCheckbox.appendChild(checkbox);
+                itemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
+                itemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
+
+
+            } )
+    
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+
+
 

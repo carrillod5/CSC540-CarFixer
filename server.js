@@ -222,19 +222,63 @@ app.post('/updateemployeeservices',(req,res)=>{
   
   )
 
-  // const values = services.map(service => [employeeId, service]);
 
-  // const sql = `INSERT INTO Employee_Specialties (employeeId, serviceName) VALUES ?`;
+})
 
-  // pool.query(sql, [values], (err, results) => {
-  //   if (err) {
-  //       console.error('Error inserting data:', err);
-  //       return;
-  //   }
-  //   return res.json({message:'success'})
 
-  // });
+app.delete('/deletecar/:licensePlate', (req, res) => {
+  console.log(req.params)
+  const { licensePlate } = req.params;
+  const query = `DELETE FROM Cars WHERE licensePlate = '${licensePlate}'`;
+  pool.query(query,  (err, results) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.json({ message: 'success' });
+  });
+});
 
+app.post('/editcar',(req,res) =>{
+
+  console.log(req.body)
+  const {licensePlate, newLicensePlate, carMake,carModel,carYear,ownerId} = req.body;
+
+  console.log(licensePlate)
+  console.log(newLicensePlate)
+  console.log(carMake)
+  console.log(carModel)
+  console.log(carYear)
+  console.log(ownerId)
+
+
+
+  if (!licensePlate || !newLicensePlate || !carMake || !carModel || !carYear || !ownerId) {
+    return res.status(400).json({ message: "Invalid input. All fields are required." });
+  }
+  query = `UPDATE Cars 
+  SET licensePlate ='${newLicensePlate}', carMake = '${carMake}', carModel = '${carModel}',
+  carYear = ${carYear}, ownerId = ${ownerId} 
+  WHERE licensePlate='${licensePlate}';    
+  `
+
+  query = `UPDATE Cars 
+      SET licensePlate = '${newLicensePlate}', carMake = '${carMake}', 
+      carModel = '${carModel}', carYear = ${carYear}, ownerId = ${ownerId}
+      WHERE licensePlate = '${licensePlate}';
+    `;
+  pool.query(query,(err,results)=>{
+    if(err){
+      console.log(err)
+      res.status(404).json({message:"error in updating database",error:err});
+    }
+    else{
+      console.log('car updated')
+      return res.json({message:'success'})
+
+    }
+
+
+  })
 
 })
 
