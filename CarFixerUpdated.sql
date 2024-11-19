@@ -115,7 +115,7 @@ CREATE TABLE Items_Used(
     itemName VARCHAR(30),
     appointmentId INT,
     PRIMARY KEY (itemName, appointmentId),
-    FOREIGN KEY (itemName) REFERENCES Items(itemName) ON DELETE SET NULL,
+    FOREIGN KEY (itemName) REFERENCES Items(itemName) ON DELETE CASCADE,
     FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId) ON DELETE CASCADE
 );
 
