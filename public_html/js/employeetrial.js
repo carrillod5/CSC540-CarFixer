@@ -52,14 +52,43 @@ fetch('/getemployees', {
 
 
                 
-                // EDITING EMPLOYEE GOES HERE
-                document.getElementById('editemployee').onclick = function(){
-                    alert("editing employee with id "+employee.employeeId)
+            // EDITING EMPLOYEE GOES HERE
+            document.getElementById('editemployee').onclick = function () {
+                alert("Editing employee with id " + employee.employeeId);
 
-                    // FETCH CODE GOES HERE
-                    // this is where you communicate with the server
-                    
-            }
+                // Collect updated employee information from modal inputs
+                const updatedEmployee = {
+                    employeeId: employee.employeeId,
+                    firstName: document.getElementById('editFName').value,
+                    lastName: document.getElementById('editLName').value,
+                    email: document.getElementById('editEmail').value,
+                    workPhone: document.getElementById('editWorkPhoneNum').value,
+                    personalPhone: document.getElementById('editPersonalPhoneNum').value,
+                };
+
+                // Send updated data to the server
+                fetch('/updateemployee', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedEmployee),
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('Employee updated successfully!');
+                        closeModal('editmodal'); // Close the modal after success
+                        location.reload(); // Reload to reflect updated data
+                    })
+                    .catch(error => {
+                        console.error('Error updating employee:', error);
+                        alert('Failed to update employee. Please try again.');
+                    });
+            };
+
 
             };
 
@@ -106,15 +135,38 @@ fetch('/getemployees', {
     });
 
 // ADDING NEW EMPLOYEE GOES HERE
-addNewEmployee = document.getElementById('addNewEmployee')
-addNewEmployee.onclick = function(){ 
-    alert("adding new employee")
-    // NEW CODE GOES HERE
-    // FETCH CODE GOES HERE IN ADDING EMPLOYEE
+addNewEmployee = document.getElementById('addNewEmployee');
+addNewEmployee.onclick = function () { 
+    alert('new employee')
+    const newEmployee = {
+        firstName: document.getElementById('fname').value,
+        lastName: document.getElementById('lname').value,
+        email: document.getElementById('email').value,
+        workPhone: document.getElementById('workPhoneNum').value,
+        personalPhone: document.getElementById('personalPhoneNum').value,
+    };
 
-
-
-}
+    fetch('/addemployee', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newEmployee),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('New employee added successfully!');
+            closeModal('modal');
+            // location.reload(); // Reload to reflect changes
+        })
+        .catch(error => {
+            console.error('Error adding new employee:', error);
+            alert('Failed to add employee. Please try again.');
+        });
+};
 
 function getServices(employee){
 
