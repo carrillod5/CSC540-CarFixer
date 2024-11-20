@@ -35,6 +35,8 @@ fetch('/getcars', {
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
             editButton.onclick = function() {
+                document.getElementById('editState').disabled = true;
+                document.getElementById('editLicensePlate').disabled = true;
 
                 openModal('editmodal')
                 document.getElementById('editState').value = state;
@@ -169,7 +171,7 @@ document.getElementById('addcar').onclick = function(){
 function addCar(){
     state = document.getElementById('state').value
     plateNumber = document.getElementById('licensePlate').value
-
+    
     licensePlate = `${state}-${plateNumber}`
     carMake = document.getElementById('carMake').value
     carModel = document.getElementById('carModel').value

@@ -240,15 +240,7 @@ app.delete('/deletecar/:licensePlate', (req, res) => {
 
 app.post('/editcar',(req,res) =>{
 
-  console.log(req.body)
   const {licensePlate, newLicensePlate, carMake,carModel,carYear,ownerId} = req.body;
-
-  console.log(licensePlate)
-  console.log(newLicensePlate)
-  console.log(carMake)
-  console.log(carModel)
-  console.log(carYear)
-  console.log(ownerId)
 
 
 
@@ -377,6 +369,111 @@ app.get('/getitems', (req,res) =>{
   })
 }
 );
+
+
+// delete a service
+app.delete('/deleteservice/:serviceName', (req, res) => {
+  const { serviceName } = req.params;
+  const query = `DELETE FROM Services WHERE serviceName = '${serviceName}'`;
+  pool.query(query,  (err, results) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.json({ message: 'success' });
+  });
+});
+
+//adding service
+app.post('/addservice',(req,res) =>{
+  console.log(req.body)
+
+  const {serviceName,serviceDescription,} = req.body;
+
+  pool.query('SELECT * FROM Services WHERE serviceName = ?', [serviceName], (err, results) => {
+    if (err) {
+        return res.status(404).send('Error retrieving Service Table:', err.message);
+    }
+    console.log(results);
+
+    if (results.length > 0) {
+        console.log('data not added');
+        return res.json({message: 'existing'});
+    }
+
+    pool.query('INSERT INTO Services (serviceName, serviceDescription) VALUES (?, ?)', 
+        [serviceName, serviceDescription], 
+        (err, results) => {
+            if (err) {
+                return res.status(404).send('Error inserting data: ' + err.message);
+            }
+            console.log('data inserted');
+            return res.json({message: 'success'});
+        }
+    );
+});
+  // pool.query(`SELECT * FROM Services WHERE serviceName='${serviceName}'`, (err, results) => {
+  //   if (err) {
+  //     return res.status(404).send('Error retrieving Service Table:', err.message);
+  //   } else {
+  //     console.log(results.length)
+  //     if(results.length>0){
+  //       console.log('data not added')
+  //       return res.json({message:'existing'})
+
+  //     }
+  //     else{
+  //       pool.query(`INSERT INTO Services (serviceName,serviceDescription) 
+  //         VALUES ('${serviceName}','${serviceDescription}')
+  //         `,(err,results)=>{
+  //           if (err){
+  //             return res.status(404).send('error inserting data '+err)
+  //           }
+  //           else{
+  //             console.log('data inserted')
+  //             return res.json({message:'success'})
+  //           }
+
+
+
+  //       })
+
+  //     }
+  //   }
+
+  // })
+
+
+  
+
+
+})
+
+// edit service information
+app.post('/editservice',(req,res) =>{
+
+  console.log(req.body)
+  const {newServiceDescription, serviceName} = req.body;
+ 
+  query = `UPDATE Services 
+      SET serviceDescription = '${newServiceDescription}'
+      WHERE serviceName = '${serviceName}';
+    `;
+  pool.query(query,(err,results)=>{
+    if(err){
+      console.log(err)
+      res.status(404).json({message:"error in updating database",error:err});
+    }
+    else{
+      console.log('service updated')
+      return res.json({message:'success'})
+
+    }
+
+
+  })
+
+})
+
 
 app.get('/getservices', (req,res) =>{
   // Query to get all tables in the database
