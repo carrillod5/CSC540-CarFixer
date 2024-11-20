@@ -176,7 +176,6 @@ app.post('/updateemployee', (req, res) => {
 
 
 // delete employee
-
 app.delete('/deleteemployee/:id', (req, res) => {
   const { id } = req.params;
   const query = `DELETE FROM Employees WHERE employeeId = ?`;
@@ -353,6 +352,44 @@ app.get('/getemployees',(req,res)=>{
 
 } )
 
+//delete item
+app.delete('/deleteitem/:itemName', (req, res) => {
+  const { itemName } = req.params;
+  const query = `DELETE FROM Items WHERE itemName = '${itemName}'`;
+  pool.query(query,  (err, results) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      res.json({ message: 'success' });
+  });
+});
+
+
+
+// editing item price or stock
+app.post('/edititem',(req,res) =>{
+
+  const {itemName, itemPrice, itemStock} = req.body;
+
+  query = `UPDATE Items 
+      SET price = ${itemPrice}, stock=${itemStock}  
+      WHERE itemName = '${itemName}';
+    `;
+  pool.query(query,(err,results)=>{
+    if(err){
+      console.log(err)
+      res.status(404).json({message:"error in updating database",error:err});
+    }
+    else{
+      console.log('item updated')
+      return res.json({message:'success'})
+
+    }
+
+
+  })
+
+})
 
 app.get('/getitems', (req,res) =>{
 
@@ -369,6 +406,44 @@ app.get('/getitems', (req,res) =>{
   })
 }
 );
+
+
+app.post('/additem',(req,res) =>{
+  console.log(req.body)
+  const {itemName, itemPrice, itemStock} = req.body
+
+  pool.query(`SELECT * FROM items WHERE ItemName='${itemName}}'`, (err, results) => {
+    if (err) {
+      console.log(err)
+      return res.status(404).send('Error retrieving Items Table:', err.message);
+    } else {
+      if(results.length>0){
+        return res.json({message:'existing'})
+
+      }
+      else{
+        pool.query(`INSERT INTO Items (itemName,price, stock) 
+          VALUES ('${itemName}',${itemPrice},${itemStock})
+          `,(err,results)=>{
+            if (err){
+              console.log(err)
+              return res.status(404).send('error inserting data '+err)
+            }
+            else{
+              console.log('data inserted')
+              return res.json({message:'success'})
+            }
+
+
+
+        })
+
+      }
+    }
+
+  })
+
+})
 
 
 // delete a service
@@ -411,39 +486,7 @@ app.post('/addservice',(req,res) =>{
         }
     );
 });
-  // pool.query(`SELECT * FROM Services WHERE serviceName='${serviceName}'`, (err, results) => {
-  //   if (err) {
-  //     return res.status(404).send('Error retrieving Service Table:', err.message);
-  //   } else {
-  //     console.log(results.length)
-  //     if(results.length>0){
-  //       console.log('data not added')
-  //       return res.json({message:'existing'})
 
-  //     }
-  //     else{
-  //       pool.query(`INSERT INTO Services (serviceName,serviceDescription) 
-  //         VALUES ('${serviceName}','${serviceDescription}')
-  //         `,(err,results)=>{
-  //           if (err){
-  //             return res.status(404).send('error inserting data '+err)
-  //           }
-  //           else{
-  //             console.log('data inserted')
-  //             return res.json({message:'success'})
-  //           }
-
-
-
-  //       })
-
-  //     }
-  //   }
-
-  // })
-
-
-  
 
 
 })
