@@ -80,7 +80,7 @@ fetch('/getservices', {
                             closeModal('editmodal');
                             location.reload(); // Reload to reflect changes
                         })
-                        .catch(error => console.error('Error deleting customer:', error));
+                        .catch(error => console.error('Error deleting service:', error));
 
                 }
 

@@ -70,6 +70,29 @@ fetch('/getitems', {
 
                 }
 
+                document.getElementById('deleteitem').onclick = function(){
+                    alert('deleting '+item.itemName)
+
+                    fetch(`/deleteitem/${item.itemName}`, {
+                        method: 'DELETE',
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message == 'success'){
+                                alert('Item deleted successfully!');
+                                closeModal('editmodal');
+                                location.reload(); // Reload to reflect changes
+                            }
+                            else{
+                                alert('logical error')
+                            }
+
+                        })
+                        .catch(error => console.error('Error deleting service:', error));
+
+
+                }
+
  
 
             };

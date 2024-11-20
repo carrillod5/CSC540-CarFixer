@@ -354,7 +354,7 @@ app.get('/getemployees',(req,res)=>{
 
 //delete item
 app.delete('/deleteitem/:itemName', (req, res) => {
-  const { serviceName } = req.params;
+  const { itemName } = req.params;
   const query = `DELETE FROM Items WHERE itemName = '${itemName}'`;
   pool.query(query,  (err, results) => {
       if (err) {
