@@ -7,6 +7,55 @@ fetch('/getappts',{
     .then(data =>{
         console.log(data)
 
+        const apptTable = document.getElementById('apptTable').getElementsByTagName("tbody")[0];
+
+        data.forEach(appointment => {
+            // Create a new row for each appointment
+            const newRow = apptTable.insertRow()
+            const apptDate = newRow.insertCell(0);
+            const apptTime = newRow.insertCell(1);
+            const apptCustomer = newRow.insertCell(2);
+            const apptVehicle = newRow.insertCell(3);
+            const apptIssue = newRow.insertCell(4);
+            const apptService = newRow.insertCell(5);
+            const apptEmployee = newRow.insertCell(6);
+            const apptActions = newRow.insertCell(7);
+
+            // Format and insert appointment date and time
+            apptDate.textContent = new Date(appointment.date).toLocaleDateString(); // Correct the date format
+            apptTime.textContent = formatTime(appointment.time); // Use your formatTime function to format the time
+            apptCustomer.textContent = appointment.customerName;
+            apptVehicle.textContent = appointment.vehicle;
+            apptIssue.textContent = appointment.issue;
+            apptService.textContent = appointment.serviceName;
+            apptEmployee.textContent = appointment.employeeName;
+            
+
+            const editButton = document.createElement("button");
+            editButton.textContent = "Edit";
+
+            editButton.onclick = function () {
+                openModal('editmodal');
+
+
+                document.getElementById('editApptDate').value =  new Date(appointment.date).toISOString().split('T')[0];
+                document.getElementById('editApptTime').value = appointment.time
+                document.getElementById('editApptIssue').value = appointment.issue
+                document.getElementById('editservices').value = appointment.serviceName
+                document.getElementById('editemployees').value = appointment.employeeId
+                // document.getElementById().value = appointment.date
+                // document.getElementById().value = appointment.date
+                // document.getElementById().value = appointment.date
+
+
+            }
+
+
+            // Append the row to the table body
+            apptActions.appendChild(editButton);
+        });
+
+
     })
     .catch(error => 
         console.log("error retrieving appointments "+ error)
@@ -22,6 +71,7 @@ fetch('/getcars', {
         cars = data.results
 
         carOption = document.getElementById('cars')
+        editCarOption = document.getElementById('editcars')
 
         cars.forEach(car => {
             // Create an option element
@@ -34,6 +84,8 @@ fetch('/getcars', {
 
             // Append the option to the select element
             carOption.appendChild(option);
+
+            editCarOption.appendChild(option);
         });
 
 
@@ -57,6 +109,8 @@ fetch('/getservices', {
         console.log(data)
   
         serviceOption = document.getElementById('services')
+        editServiceOption = document.getElementById('editservices')
+
 
         data.forEach(service => {
             // Create an option element
@@ -69,12 +123,16 @@ fetch('/getservices', {
 
             // Append the option to the select element
             serviceOption.appendChild(option);
+            editServiceOption.appendChild(option);
         });
 
         serviceOption.addEventListener('change', event => {
             const selectedValue = event.target.value;
             // alert(`You selected: ${selectedValue}`);
             employeeOption = document.getElementById('employees')
+
+            editEmployeeOption = document.getElementById('editemployees')
+
             // Clear all existing options
 
             fetch(`/getserviceemployees?service=${selectedValue}`, {
@@ -108,6 +166,8 @@ fetch('/getservices', {
         
                     // Append the option to the select element
                     employeeOption.appendChild(option);
+                    editEmployeeOption.appendChild(option);
+
                     
     
 
@@ -138,6 +198,8 @@ fetch('/getservices', {
             console.log('Response from server:', data);
 
             itemCheckbox = document.getElementById('items')
+
+            editItemCheckbox = document.getElementById('edititems')
             data.forEach(item =>{
 
                 if (item.stock==0){
@@ -160,6 +222,13 @@ fetch('/getservices', {
                 itemCheckbox.appendChild(checkbox);
                 itemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
                 itemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
+
+
+                editItemCheckbox.appendChild(label);
+                editItemCheckbox.appendChild(checkbox);
+                editItemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
+                editItemCheckbox.appendChild(document.createElement('br')); // Add a line break for spacing
+
 
 
             } )
@@ -239,4 +308,11 @@ function getCheckedItems() {
 }
 
 
+// Function to format time as 12-hour format with AM/PM
+function formatTime(time) {
+    const [hours, minutes] = time.split(':');
+    const date = new Date();
+    date.setHours(hours, minutes);
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }).toLowerCase();
+}
 

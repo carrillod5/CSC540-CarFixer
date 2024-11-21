@@ -11,13 +11,14 @@
 </head>
 <div class="page-title">Appointments</div>
 <button class="add-button"  id="addAppointment">New Appointment</button>
-<table>
+<table id="apptTable">
     <thead>
         <tr>
             <th>Date</th>
             <th>Time</th>
             <th>Customer</th>
             <th>Vehicle</th>
+            <th>Issue </th>
             <th>Service</th>
             <th>Employee</th>
             <th>Actions</th>
@@ -65,3 +66,43 @@
         </div>
     </div>
 </div>
+
+<div id="editmodal" class="modal">
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('editmodal')">&times;</div>
+
+        <br> <br>
+        <div id='modalInfo'>
+        Edit Appointment Info <br><br>
+        <input type="date" id="editApptDate" name="apptDate" placeholder="Appointment Date"><br><br>
+        <input type="time" id="editApptTime" name="apptTime" placeholder="Appointment Time"><br><br>
+        <input type="text" id="editApptIssue" name='apptIssue' placeholder="Appointment Issue"> <br><br>
+
+        <select id="editcars" name="cars">
+            <option value="" disabled selected>Select Car</option>
+
+         </select>  <br> <br>
+
+        <select id="editservices" name="services">
+            <option value="" disabled selected>Select Service</option>
+        </select>  <br> <br>
+
+        <select id="editemployees" name="employees" style="display: none;">
+            <option value="" disabled selected>Select Employee</option>
+        </select> <br> <br>
+
+
+        <div id="edititems" name="items" >
+            Additional Items <br> <br>
+        </div>
+
+
+
+        <input id='editappt' type="button" value="Edit Appointment">
+
+
+        </div>
+    </div>
+</div>
+
