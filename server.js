@@ -50,8 +50,26 @@ app.delete('/deleteappt/:id', (req, res) => {
     if (err) return res.status(500).send(err);
     if (results.affectedRows === 0) {
       return res.status(404).json({ message: 'Appointment not found' });
-    }
-    res.json({ message: 'success' });
+    };
+
+    updateEmployeeAppts = `UPDATE employees
+        SET totalAppts = (
+            SELECT COUNT(*)
+            FROM appointments
+            WHERE appointments.employeeId = employees.employeeId
+        )
+        WHERE employeeId != 0;`
+    pool.query(updateEmployeeAppts,(err,results) =>{
+          if(err){
+            return res.status(404).json({message: "error "+err})
+
+
+          }
+          res.json({ message: 'success' });
+
+
+
+        })
   });
 });
 // editing appointment
@@ -63,7 +81,9 @@ app.put('/editappt', (req, res) => {
   SET date = '${date}', time = '${time}', 
       issue = '${issue}',  serviceName = '${serviceName}', 
       employeeId = ${employeeId}, carId =  '${carId}'
-  WHERE appointmentId = ${appointmentId}
+  WHERE appointmentId = ${appointmentId};
+
+  
   `;
 
   console.log(items)
@@ -72,36 +92,57 @@ app.put('/editappt', (req, res) => {
       if (err) {
         return res.status(500).send(err);
       }
-      
-      if (items.length==0){
-        return res.json({message:'success'})
-      }
+      updateEmployeeAppts = `UPDATE employees
+      SET totalAppts = (
+          SELECT COUNT(*)
+          FROM appointments
+          WHERE appointments.employeeId = employees.employeeId
+      )
+      WHERE employeeId != 0;`
+
+      pool.query(updateEmployeeAppts,(err,results) =>{
+        if(err){
+          return res.status(404).json({message: "error "+err})
 
 
-      pool.query(`delete from items_used where appointmentId=${appointmentId}`,(err,results)=>{
-        if (err) {
-            console.error('Error deleting data:', err);
-            return res.status(500).send(err);
         }
-        else{
+        if (items.length==0){
+          return res.json({message:'success'})
+        }
+        
 
-          const values = items.map(item => [appointmentId, item]);
+        pool.query(`delete from items_used where appointmentId=${appointmentId}`,(err,results)=>{
+          if (err) {
+              console.error('Error deleting data:', err);
+              return res.status(500).send(err);
+          }
+          else{
 
-          const sql = `INSERT INTO Items_Used (appointmentId, ItemName) VALUES ?`;
-    
-          pool.query(sql, [values], (err, results) => {
-            if (err) {
-                console.error('Error inserting data:', err);
-                return;
-            }
-            return res.json({message:'success'})
-    
+            const values = items.map(item => [appointmentId, item]);
+
+            const sql = `INSERT INTO Items_Used (appointmentId, ItemName) VALUES ?`;
+      
+            pool.query(sql, [values], (err, results) => {
+              if (err) {
+                  console.error('Error inserting data:', err);
+                  return;
+              }
+              return res.json({message:'success'})
+      
+                  });
+
+
+            
+              }
           });
-
-
     
-      }
-  });
+
+
+
+        })
+      
+      
+
 
 
 })
@@ -124,8 +165,23 @@ app.post('/addappt', (req, res) => {
       } else {
           const appointmentId = results.insertId;
 
-          // Prepare to insert into items_used
-          if (items && items.length > 0) {
+          updateEmployeeAppts = `UPDATE employees
+          SET totalAppts = (
+              SELECT COUNT(*)
+              FROM appointments
+              WHERE appointments.employeeId = employees.employeeId
+          )
+          WHERE employeeId != 0;`
+
+          pool.query(updateEmployeeAppts,(err,results) =>{
+            if(err){
+              return res.status(404).json({message: "error "+err})
+    
+    
+            }
+
+            // Prepare to insert into items_used
+            if (items && items.length > 0) {
               const values = items.map(item =>
                   `(${appointmentId}, '${item}')`).join(', ');
 
@@ -142,6 +198,10 @@ app.post('/addappt', (req, res) => {
           } else {
               res.status(200).json({ message: 'success' });
           }
+          
+          });
+
+
       }
   }); 
 });

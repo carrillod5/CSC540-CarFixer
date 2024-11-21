@@ -13,6 +13,8 @@ fetch('/getappts',{
         data.forEach(appointment => {
             // Create a new row for each appointment
             const newRow = apptTable.insertRow()
+
+            // create new columns
             const apptDate = newRow.insertCell(0);
             const apptTime = newRow.insertCell(1);
             const apptCustomer = newRow.insertCell(2);
@@ -20,7 +22,8 @@ fetch('/getappts',{
             const apptIssue = newRow.insertCell(4);
             const apptService = newRow.insertCell(5);
             const apptEmployee = newRow.insertCell(6);
-            const apptActions = newRow.insertCell(7);
+            const apptFinished = newRow.insertCell(7);
+            const apptActions = newRow.insertCell(8);
 
             // Format and insert appointment date and time
             apptDate.textContent = new Date(appointment.date).toLocaleDateString(); // Correct the date format
@@ -32,8 +35,28 @@ fetch('/getappts',{
             apptEmployee.textContent = appointment.employeeName;
             
 
+            apptFinished.textContent = (function() {
+                if(appointment.finished){
+                    return "Yes"
+                }
+                else{
+                    return "No"
+                }
+            })();
+
+            function finished(apptFinished) {
+                if(apptFinished){
+                    return "Yes"
+                }
+                else{
+                    return "No"
+                }
+            }
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
+
+
+
 
             editButton.onclick = function () {
                 openModal('editmodal');
