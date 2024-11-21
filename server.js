@@ -40,6 +40,14 @@ app.use(express.json());
 
 
 
+// adding appointment
+app.post('/addappt',(req,res) => {
+  const {date, time, issue, carId ,service, employeeId, items} = req.body
+
+  
+}
+)
+
 // getting employees who offer a certain service
 app.get('/getserviceemployees',(req,res) =>{
   service = req.query.service
@@ -60,6 +68,7 @@ app.get('/getserviceemployees',(req,res) =>{
 
 }
 )
+
 
 // Add Customer Endpoint
 app.post('/addcustomer', (req, res) => {

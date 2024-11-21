@@ -155,5 +155,74 @@ fetch('/getservices', {
             console.error('Error sending data:', error);
         });
 
+document.getElementById('addappt').onclick = function(){
+    alert('adding appointment')
+
+    apptDate = document.getElementById('apptDate').value
+    apptTime = document.getElementById('apptTime').value
+    apptIssue = document.getElementById('apptIssue').value
+
+    carId = document.getElementById('cars').value
+    service = document.getElementById('services').value
+    employeeId = document.getElementById('employees').value
+
+    checkedItems = getCheckedItems()
+    formData = {
+        apptDate:apptDate,
+        apptTime: apptTime,
+        apptIssue: apptIssue,
+        carId: carId,
+        service: service,
+        employeeId:employeeId,
+        items: checkedItems
+    }
+    console.log(formData)
+
+
+    fetch('addappt', {
+        method: 'POST',  // Use POST to add data to the server
+        headers: {
+            'Content-Type': 'application/json'  // Inform server we're sending JSON data
+        },
+        body: JSON.stringify(formData)})
+    .then(response => response.json())
+    .then(data =>{
+        console.log(data)
+        if (data.message=='success'){
+            alert("appointment added to database")
+            location.reload();
+
+        }
+        else{
+            alert('logical error')
+        }
+    })
+    .catch(error => {
+        console.error('Error sending data:', error);
+    });
+
+        
+}
+
+// Function to get checked items
+function getCheckedItems() {
+
+    const itemCheckbox = document.getElementById('items');
+
+
+    // Get all checkboxes inside the itemCheckbox div
+    const checkboxes = itemCheckbox.querySelectorAll('input[type="checkbox"]');
+    const checkedItems = [];
+
+    // Iterate over checkboxes and collect checked ones
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            checkedItems.push(checkbox.value);
+        }
+    });
+
+    return checkedItems;
+}
+
 
 
