@@ -38,6 +38,75 @@ app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.json());
 
 
+// deleting appointment
+app.delete('/deleteappt/:id', (req, res) => {
+  console.log(req.params);
+  const { id } = req.params;  // The appointmentId parameter will be 'id' based on the URL pattern.
+
+  // Use parameterized query to prevent SQL injection
+  const query = 'DELETE FROM Appointments WHERE appointmentId = ?';
+
+  pool.query(query, [id], (err, results) => {
+    if (err) return res.status(500).send(err);
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.json({ message: 'success' });
+  });
+});
+// editing appointment
+app.put('/editappt', (req, res) => {
+  console.log(req.body)
+  const { appointmentId, date, time, issue, serviceName,employeeId, carId ,items} = req.body;
+  const query = `
+  UPDATE appointments 
+  SET date = '${date}', time = '${time}', 
+      issue = '${issue}',  serviceName = '${serviceName}', 
+      employeeId = ${employeeId}, carId =  '${carId}'
+  WHERE appointmentId = ${appointmentId}
+  `;
+
+  console.log(items)
+
+  pool.query(query, (err, results) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      
+      if (items.length==0){
+        return res.json({message:'success'})
+      }
+
+
+      pool.query(`delete from items_used where appointmentId=${appointmentId}`,(err,results)=>{
+        if (err) {
+            console.error('Error deleting data:', err);
+            return res.status(500).send(err);
+        }
+        else{
+
+          const values = items.map(item => [appointmentId, item]);
+
+          const sql = `INSERT INTO Items_Used (appointmentId, ItemName) VALUES ?`;
+    
+          pool.query(sql, [values], (err, results) => {
+            if (err) {
+                console.error('Error inserting data:', err);
+                return;
+            }
+            return res.json({message:'success'})
+    
+          });
+
+
+    
+      }
+  });
+
+
+})
+
+});
 
 
 // Adding appointment
@@ -175,19 +244,6 @@ app.post('/addcustomer', (req, res) => {
   });
 });
 
-// app.post('/addcustomer', (req, res) => {
-//     const { firstName, lastName, phone, email, address } = req.body;
-//     const query = `INSERT INTO Customers (firstName, lastName, phone, email, address) VALUES (?, ?, ?, ?, ?)`;
-
-//     connection.query(query, [firstName, lastName, phone, email, address], (err, results) => {
-//         if (err) {
-//             console.error('Error inserting customer:', err);
-//             res.status(500).send('Failed to add customer.');
-//         } else {
-//             res.status(200).json({ message: 'Customer added successfully!' });
-//         }
-//     });
-// });
 
 // update customer
 app.post('/updatecustomer', (req, res) => {
