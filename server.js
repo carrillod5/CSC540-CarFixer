@@ -38,6 +38,26 @@ app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.json());
 
 
+
+//getting appointments that are not finished
+app.get('/getupcomingappts', (req,res)=>{
+
+  query = `select appointments.*, CONCAT(firstname, ' ',lastname) as customerName
+  from appointments 
+  join (cars) on carId=licensePlate 
+  join (customers) on ownerid=customerid
+  where finished=false;
+  `
+
+  pool.query(query, (err, results) => {
+    if (err){ 
+      return res.status(500).json({message:err});
+    }
+
+    res.status(200).json(results);
+  });
+})
+
 // deleting appointment
 app.delete('/deleteappt/:id', (req, res) => {
   console.log(req.params);

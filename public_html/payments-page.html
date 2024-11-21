@@ -16,10 +16,11 @@
         <tr>
             <th>Customer</th>
             <th>Appointment Date</th>
-            <th>Items</th>
             <th>Total Charge</th>
+            <th>Total Paid</th>
             <th>Due Payment</th>
             <th>Fully Paid</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -33,17 +34,28 @@
 
         <br> <br>
         <div id='modalInfo'>
-        New Payment Info <br><br>
-        <input type="text" id="customerName" name="customerName" placeholder="Customer Name"><br><br>
-        <input type="text" id="apptDate" name="apptDate" placeholder="Appointment Date"><br><br>
-        Items bought <br> <br>
-        <input type="checkbox" name="items"> Windshield <br><br>
-        <input type="checkbox" name="items"> Tires <br><br>
-        <input type="checkbox" name="items"> Headlights <br><br>
-        <input type="checkbox" name="items"> Brakes <br><br>
-
+        <h1>New Payment Info </h1>
+        <br><br>
         
-        <!-- <input type="number" id="itemStock" name="itemStock" placeholder="Item Stock"><br><br> -->
+        <select id="appts" name="appts">
+            <option value="" disabled selected>Select Appointment</option>
+
+         </select>  <br> <br>
+
+
+         <div id="paymentInfo" style="display: none;">
+            Due Payment<br>
+            <input type="date" id="paymentDue" name="paymentDue" placeholder="Due Payment Date"><br><br>
+            
+            Base Charge <br>
+            <input type="number" id="charge" name="charge" placeholder="Base Charge"><br><br>
+
+
+            Paid Amount <br>
+            <input type="number" id="paid" name="paid" placeholder="Paid Amount"><br><br>
+
+         </div>
+        
 
 
         <input type="submit" value="Submit">
