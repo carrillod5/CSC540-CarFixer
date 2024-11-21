@@ -55,6 +55,10 @@ CREATE TABLE Items (
     stock INT DEFAULT 0
 );
 
+ALTER TABLE Items
+DROP PRIMARY KEY,
+ADD PRIMARY KEY (itemId),
+ADD itemId INT NOT NULL AUTO_INCREMENT;
 
 INSERT INTO Items (itemName, price, stock) VALUES
 ('Brake Pads', 75.50, 20),
@@ -133,3 +137,34 @@ CREATE TABLE Services_Used (
     FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId) ON DELETE CASCADE,
     FOREIGN KEY (serviceName) REFERENCES Services(serviceName) ON DELETE RESTRICT
 );
+
+DROP TABLE services_used;
+DROP TABLE items_payments;
+
+CREATE TABLE Items_Used(
+    itemId Int,
+    appointmentId INT,
+    quantity INT,
+    PRIMARY KEY (itemId, appointmentId),
+    FOREIGN KEY (itemId) REFERENCES Items(itemId),
+    FOREIGN KEY (appointmentId) REFERENCES Appointments(appointmentId)
+);
+
+ALTER TABLE Appointments
+ADD paymentId INT,
+ADD serviceName VARCHAR(20),
+ADD CONSTRAINT fk_paymentId FOREIGN KEY (paymentId) REFERENCES Payments(paymentId),
+ADD CONSTRAINT fk_serviceName FOREIGN KEY (serviceName) REFERENCES Services(serviceName);
+
+ALTER TABLE Appointments
+DROP FOREIGN KEY appointments_ibfk_1,
+DROP COLUMN customerId;
+
+ALTER TABLE Services
+ADD serviceCost FLOAT;
+
+UPDATE Services SET serviceCost = 75.00 WHERE serviceName = 'Battery Check';
+UPDATE Services SET serviceCost = 50.00 WHERE serviceName = 'Brake Inspection';
+UPDATE Services SET serviceCost = 100.00 WHERE serviceName = 'Engine Diagnostic';
+UPDATE Services SET serviceCost = 40.00 WHERE serviceName = 'Oil Change';
+UPDATE Services SET serviceCost = 30.00 WHERE serviceName = 'Tire Rotation';
