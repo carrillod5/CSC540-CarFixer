@@ -1,4 +1,18 @@
 // alert('vehicles.js being read')
+fetch('/getappts',{    
+    method: 'GET',
+    }
+)
+    .then(response => response.json())
+    .then(data =>{
+        console.log(data)
+
+    })
+    .catch(error => 
+        console.log("error retrieving appointments "+ error)
+
+    )
+
 fetch('/getcars', {
     method: 'GET',
     })
@@ -168,9 +182,9 @@ document.getElementById('addappt').onclick = function(){
 
     checkedItems = getCheckedItems()
     formData = {
-        apptDate:apptDate,
-        apptTime: apptTime,
-        apptIssue: apptIssue,
+        date:apptDate,
+        time: apptTime,
+        issue: apptIssue,
         carId: carId,
         service: service,
         employeeId:employeeId,

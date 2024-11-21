@@ -40,13 +40,68 @@ app.use(express.json());
 
 
 
-// adding appointment
-app.post('/addappt',(req,res) => {
-  const {date, time, issue, carId ,service, employeeId, items} = req.body
+// Adding appointment
+app.post('/addappt', (req, res) => {
+  const { date, time, issue, carId, service, employeeId, items } = req.body;
 
-  
-}
-)
+  let query = `INSERT INTO appointments (date, time, employeeId, carId, issue, serviceName)
+               VALUES ('${date}', '${time}', ${employeeId}, '${carId}', '${issue}', '${service}')`;
+
+
+  pool.query(query, (err, results) => {
+      if (err) {
+          console.error('Database Error:', err); // Log the error
+          res.status(500).send(err); // Send the error to the client
+      } else {
+          const appointmentId = results.insertId;
+
+          // Prepare to insert into items_used
+          if (items && items.length > 0) {
+              const values = items.map(item =>
+                  `(${appointmentId}, '${item}')`).join(', ');
+
+              query = `INSERT INTO items_used (appointmentId, itemName) VALUES ${values}`;
+
+              pool.query(query, (err, results) => {
+                  if (err) {
+                      console.error('Database Error:', err);
+                      res.status(500).send(err);
+                  } else {
+                      res.status(200).json({ message: 'success' });
+                  }
+              });
+          } else {
+              res.status(200).json({ message: 'success' });
+          }
+      }
+  }); 
+});
+
+// getting appointments
+app.get('/getappts',(req,res)=>{
+
+  query = `select appointments.*, CONCAT(customers.firstName, ' ', customers.lastName) AS customerName,
+CONCAT(carMake, ' ', carModel, ' ', carYear) AS vehicle, 
+CONCAT(employees.firstName, ' ',employees.lastName) AS employeeName
+from appointments 
+JOIN cars on carId=licensePlate 
+JOIN customers on ownerId=customerId
+JOIN employees USING (employeeId)
+;`
+
+  pool.query(query, (err, results) => {
+    if (err) {
+        console.error('Database Error:', err); // Log the error
+        res.status(500).send(err); // Send the error to the client
+    } else {
+        res.status(200).json(results);
+    }
+  });
+
+
+
+})
+
 
 // getting employees who offer a certain service
 app.get('/getserviceemployees',(req,res) =>{
