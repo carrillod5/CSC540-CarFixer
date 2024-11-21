@@ -141,3 +141,149 @@ addNewEmployee.onclick = function () {
             alert('Failed to add employee. Please try again.');
         });
 };
+
+function getServices(employee){
+
+    fetch('/getservices', {
+        method: 'GET',
+        })
+        .then(response => response.json())  // Parsing the JSON response
+        .then(data => {
+            console.log('Response from server:', data);
+
+            
+            const servicesList = document.getElementById('servicesList');
+            servicesList.innerHTML = '';  // Clear previous checkboxes
+
+            getEmployeeServices(employee)
+            .then(employeeServices => {
+                console.log('Employee services:', employeeServices);
+                // Now you can use employeeServices here
+
+                // Create checkboxes based on services returned from the server
+                data.forEach(service => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = service.serviceName;
+                    checkbox.name = 'services';
+                    checkbox.value = service.serviceName;
+
+                    // Check if the service is in the employeeServices list
+                    if (employeeServices.includes(service.serviceName)) {
+                        checkbox.checked = true;  // Pre-check the checkbox if the employee uses the service
+                    }
+
+                    // Label for the checkbox
+                    const label = document.createElement('label');
+                    label.htmlFor = service.serviceName;
+                    label.textContent = service.serviceName;
+
+                    // Append the checkbox and label to the services list
+                    servicesList.appendChild(checkbox);
+                    servicesList.appendChild(label);
+                    servicesList.appendChild(document.createElement('br')); // Line break
+                    servicesList.appendChild(document.createElement('br')); // Line break
+                });
+
+                // Handling the "updateServices" button click event
+                document.getElementById('updateServices').onclick = function() {
+                    alert('Updating services for ' + employee.firstName + " " + employee.lastName);
+
+                    // Collect the checked checkboxes
+                    const checkedServices = [];
+                    const checkboxes = document.querySelectorAll('#servicesList input[type="checkbox"]:checked');
+
+                    checkboxes.forEach(checkbox => {
+                        checkedServices.push(checkbox.value);
+                    });
+
+                    // Log or send the selected services to the server
+                    updateServices(employee, checkedServices);
+                };
+            })
+            .catch(error => {
+                console.error('Error getting employee services:', error);
+            });
+          
+    
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+
+
+}
+
+function updateServices(employee,services){
+    console.log(`Employee:${employee.employeeId}  Selected services: ${services}`);
+
+    fetch('/updateemployeeservices', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // Indicates that the data is in JSON format
+        },
+        body: JSON.stringify({employeeId:employee.employeeId,services:services}),
+        })
+        .then(response => response.json())  // Parsing the JSON response
+        .then(data => {
+            console.log('Response from server:', data);
+            
+            if(data.message=='success'){
+                alert('services updated for '+employee.firstName+' '+employee.lastName)
+            }
+    
+        })
+        .catch(error => {
+            console.error('Error sending data:', error);
+        });
+
+}
+
+
+function getEmployeeServices(employee) {
+    // Return the fetch promise to ensure it resolves with employee services data
+    return fetch(`/getemployeeservices?employeeId=${employee.employeeId}`, {
+        method: 'GET',
+    })
+    .then(response => response.json())  // Parsing the JSON response
+    .then(data => {
+        console.log('Response from server:', data);
+        // Map the data to extract service names and return them
+        return data.map(item => item.serviceName);
+    })
+    .catch(error => {
+        console.error('Error sending data:', error);
+        // Optionally return an empty array in case of error
+        return [];
+    });
+}
+function viewEmployeeServices(employee){
+    getEmployeeServices(employee)
+    .then(employeeServices => {
+        console.log('Employee services:', employeeServices);
+        document.getElementById('viewheader').innerHTML=`Services offered by ${employee.firstName} ${employee.lastName}`
+    
+        const viewServicesList = document.getElementById('offeredservices');
+        viewServicesList.innerText = ''; // This clears the existing content
+        if (employeeServices.length==0){
+            viewServicesList.innerHTML = `${employee.firstName} ${employee.lastName} has no offered services at the moment`
+            return
+        }
+        // document.getElementById('offeredservices').innerHTML=`Services offered by ${employee.firstName} ${employee.lastName}`
+        
+        viewServicesHTML = ''
+       // Loop through each service and create a new element with a line break
+        employeeServices.forEach(service => {
+            console.log(service)
+            viewServicesHTML+= `${service} <br><br>`
+        });   
+        viewServicesList.innerHTML = viewServicesHTML;
+            
+    
+    })
+    .catch(error => {
+        console.error('Error getting employee services:', error);
+    });
+  
+
+}

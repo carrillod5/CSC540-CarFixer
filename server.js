@@ -77,6 +77,29 @@ app.post('/addappt', (req, res) => {
   }); 
 });
 
+// getting items used at each appointment
+app.get('/getitemsused',(req,res) =>{
+
+  apptId = req.query.apptId
+
+  query = `SELECT *
+    FROM items_used
+    WHERE appointmentId=${apptId} `
+
+  pool.query(query, (err, results) => {
+    if (err) {
+        console.error('Database Error:', err); // Log the error
+        res.status(500).send(err); // Send the error to the client
+    } else {
+        res.status(200).json(results);
+    }
+});
+
+}
+)
+
+
+
 // getting appointments
 app.get('/getappts',(req,res)=>{
 

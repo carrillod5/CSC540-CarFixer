@@ -1,4 +1,5 @@
 // alert('vehicles.js being read')
+
 fetch('/getappts',{    
     method: 'GET',
     }
@@ -43,10 +44,23 @@ fetch('/getappts',{
                 document.getElementById('editApptIssue').value = appointment.issue
                 document.getElementById('editservices').value = appointment.serviceName
                 document.getElementById('editemployees').value = appointment.employeeId
-                // document.getElementById().value = appointment.date
-                // document.getElementById().value = appointment.date
-                // document.getElementById().value = appointment.date
 
+                
+                fetch(`/getitemsused?apptId=${appointment.appointmentId}`,{
+                    method: 'GET',
+                })
+                    .then(response =>response.json())
+                    
+                    .then(data => {
+                        console.log(data)
+
+                        const editItemCheckbox = document.getElementById('edititems');
+
+                        
+                    })
+                    .catch(error => 
+                        console.log("error retrieving items used: "+error)
+                    )
 
             }
 
