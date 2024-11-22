@@ -37,6 +37,50 @@ const pool = mysql.createPool(connectionObj);
 app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.json());
 
+app.put('/editpayment',(req,res)=>{
+  console.log(req.body)
+  const {paymentDue,totalCharge, paid,paymentId} = req.body
+  fullyPaid = false;
+  if (paid>=totalCharge){
+    fullyPaid = true
+  }
+
+  query = `UPDATE Payments
+  SET fullyPaid=${fullyPaid}, duePayment='${paymentDue}',
+  totalPrice = ${totalCharge}, paidAmount = ${paid}
+  WHERE paymentId=${paymentId}
+  `
+  pool.query(query, (err, results) => {
+    if (err){ 
+      console.log(err)
+      return res.status(500).json({message:err});
+    }
+
+    res.status(200).json({message:'success'});
+  });
+
+
+
+
+})
+app.get('/getpayments', (req,res) =>{
+  query = `SELECT Payments.*, date, CONCAT(firstName,' ',lastName) as customerName
+  FROM Payments
+  JOIN Appointments USING (appointmentId)
+  JOIN Customers USING (customerId)
+  `
+
+  pool.query(query, (err, results) => {
+    if (err){ 
+      return res.status(500).json({message:err});
+    }
+
+    res.status(200).json(results);
+  });
+
+
+})
+
 //adding a new payment
 app.post('/addnewpayment', (req,res)=>{
   console.log(req.body)
@@ -71,7 +115,18 @@ app.post('/addnewpayment', (req,res)=>{
         console.log(err)
         return res.status(500).json({message:err});
       }
-      res.status(200).json({message:'success'});
+      finishApptQuery = `UPDATE appointments
+      SET finished = ${true}
+      WHERE appointmentId=${apptId};`
+      pool.query(finishApptQuery, (err,results) => {
+        if (err){ 
+          console.log(err)
+          return res.status(500).json({message:err});
+        }
+        res.status(200).json({message:'success'});
+
+
+      })
 
     })
     
@@ -86,15 +141,21 @@ app.post('/addnewpayment', (req,res)=>{
 //getting appointments that are not finished
 app.get('/getupcomingappts', (req,res)=>{
 
-  query = `select appointments.*, CONCAT(firstname, ' ',lastname) as customerName, customerId
-  from appointments 
-  join (cars) on carId=licensePlate 
-  join (customers) on ownerid=customerid
-  where finished=false;
+  query = `SELECT appointments.*, 
+        CONCAT(customers.firstname, ' ', customers.lastname) AS customerName, 
+        SUM(Items.price) AS itemsCost, customerId
+        FROM appointments
+        JOIN cars ON appointments.carId = cars.licensePlate
+        JOIN customers ON ownerid = customerid
+        JOIN Items_Used USING (appointmentId)
+        JOIN Items USING (itemName)
+        where finished=false
+        GROUP BY appointmentId;
   `
 
   pool.query(query, (err, results) => {
     if (err){ 
+      console.log(err)
       return res.status(500).json({message:err});
     }
 

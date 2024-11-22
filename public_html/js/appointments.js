@@ -44,14 +44,6 @@ fetch('/getappts',{
                 }
             })();
 
-            function finished(apptFinished) {
-                if(apptFinished){
-                    return "Yes"
-                }
-                else{
-                    return "No"
-                }
-            }
             const editButton = document.createElement("button");
             editButton.textContent = "Edit";
 

@@ -11,7 +11,7 @@
 </head>
 <div class="page-title">Payments</div>
 <button class="add-button"  id="addPayment">Add New Payment</button>
-<table>
+<table id='paymentTable'>
     <thead>
         <tr>
             <th>Customer</th>
@@ -44,10 +44,10 @@
 
 
          <div id="paymentInfo" style="display: none;">
-            
+            <span id="addCost">Items Additional Cost:  </span> <br> <br>
             Customer<br>
             <select id="customers" name="customers">
-                <option value="" disabled selected>Select Appointment</option>
+                <option value="" disabled selected>Select Customer</option>
 
             </select>  <br> <br>
 
@@ -73,4 +73,32 @@
         </div>
     </div>
 </div>
+
+
+<div id="editmodal" class="modal">
+    
+    
+    <div class="modal-content">
+        <div class="close" onclick="closeModal('editmodal')">&times;</div>
+        
+        
+        <div id='editModalInfo'>
+            <h1>Edit Payment Info </h1>
+
+            Due Payment<br>
+            <input type="date" id="editPaymentDue" name="editPaymentDue" placeholder="Edit Due Payment Date"><br><br>
+            
+            Total Charge <br>
+            <input type="number" id="editTotalCharge" name="editTotalCharge" placeholder="Edit Total Charge"><br><br>
+
+
+            Paid Amount <br>
+            <input type="number" id="editPaid" name="editPaid" placeholder="Paid Amount"><br><br>
+            <input id='editPayment' type="button" value="Edit Payment">
+
+        </div>
+
+    </div>
+</div>
+
 

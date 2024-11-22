@@ -1,3 +1,97 @@
+fetch('/getpayments',{
+    method:'GET'
+})
+.then(response => response.json())
+.then(data =>{
+    console.log(data)
+
+    const paymentTable = document.getElementById('paymentTable').getElementsByTagName("tbody")[0];
+
+    data.forEach(payment=>{
+        const newRow = paymentTable.insertRow()
+
+        // create new columns
+        const customer = newRow.insertCell(0);
+        const apptDate = newRow.insertCell(1);
+        const totalCharge = newRow.insertCell(2);
+        const totalPaid = newRow.insertCell(3);
+        const duePayment = newRow.insertCell(4);
+        const fullyPaid = newRow.insertCell(5);
+        const actions = newRow.insertCell(6);
+
+        customer.textContent = payment.customerName
+        apptDate.textContent = new Date(payment.date).toLocaleDateString();  
+        totalCharge.textContent = "$"+payment.totalPrice;
+        totalPaid.textContent = "$"+payment.paidAmount
+        duePayment.textContent = new Date(payment.duePayment).toLocaleDateString(); 
+        fullyPaid.textContent  = (function() {
+            if(payment.fullyPaid){
+                return "Yes"
+            }
+            else{
+                return "No"
+            }
+        })(); 
+
+
+        const editButton = document.createElement("button");
+        editButton.textContent = "Edit";
+
+        editButton.onclick = function(){
+            openModal('editmodal')
+            document.getElementById('editPaymentDue').value = new Date(payment.duePayment).toISOString().split('T')[0]; 
+            document.getElementById('editTotalCharge').value = payment.totalPrice
+            document.getElementById('editPaid').value = payment.paidAmount
+
+            document.getElementById('editPayment').onclick = function(){
+                alert('editing payment')
+
+                const editPaymentData = {
+                    paymentDue : document.getElementById('editPaymentDue').value,
+                    totalCharge: parseFloat(document.getElementById('editTotalCharge').value),
+                    paid: parseFloat(document.getElementById('editPaid').value),
+                    paymentId:payment.paymentId 
+                }
+
+                fetch('/editpayment', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(editPaymentData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.message === 'success') {
+                        alert('Payment successfully edited');
+                        location.reload(); // Optionally reload the page to reflect changes
+                    } 
+                    else {
+                        alert('Logical Error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error with the request');
+                });
+            }
+        }
+
+        actions.appendChild(editButton);
+
+
+
+    })
+})
+.catch( error =>{
+    alert("error getting payments")
+    console.log(error)
+}
+)
+
+
+
 fetch('/getupcomingappts',{
     method: 'GET',
     })
@@ -41,6 +135,7 @@ fetch('/getupcomingappts',{
 
 
             customerOption.value = appointment.customerId
+            
             customerOption.textContent = appointment.customerName;
 
             customerDropdown.appendChild(customerOption)
@@ -48,8 +143,12 @@ fetch('/getupcomingappts',{
             
             apptsDropdown.addEventListener('change',function(){
                 document.getElementById('paymentInfo').style.display='block'
+                
+                document.getElementById('addCost').innerHTML = `Items Additional Cost: $${appointment.itemsCost}`
                 customerDropdown.value=appointment.customerId
                 customerDropdown.disabled = true;
+
+
 
                 paymentDue = document.getElementById('paymentDue')
                 charge = document.getElementById('charge')
@@ -61,6 +160,7 @@ fetch('/getupcomingappts',{
                         alert('Fill out everything!')
                         return
                     }
+                    alert(customerOption.value)
 
                     paymentData = {
                         apptId: parseInt(apptsDropdown.value),
@@ -69,6 +169,7 @@ fetch('/getupcomingappts',{
                         charge:parseFloat(charge.value),
                         paid:parseFloat(paid.value)
                     }
+                    console.log(paymentData)
 
                     fetch('/addnewpayment', {
                         method: 'POST',
@@ -85,23 +186,12 @@ fetch('/getupcomingappts',{
                         console.log(data)
                         if (data.message=='success'){
                             alert("payment added")
+                            location.reload()
                         }
                         else{
                             alert('logical error')
                         }
-                        // if (data.message=='existing'){
-                        //     alert("Service already exists!")
-                        // }
-                        // else if (data.message=='success'){
-                        //     alert('Service successfully added')
-                        //     location.reload(); // Reload to reflect changes
-                
-                        // }
-                        // else{
-                        //     alert('logical error')
-                        // }
-                        
-                     
+
                     })
                     .catch(error => {
                         console.error('Error adding new payment:', error);
