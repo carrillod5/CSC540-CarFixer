@@ -44,6 +44,13 @@
 
 
          <div id="paymentInfo" style="display: none;">
+            
+            Customer<br>
+            <select id="customers" name="customers">
+                <option value="" disabled selected>Select Appointment</option>
+
+            </select>  <br> <br>
+
             Due Payment<br>
             <input type="date" id="paymentDue" name="paymentDue" placeholder="Due Payment Date"><br><br>
             
@@ -54,11 +61,13 @@
             Paid Amount <br>
             <input type="number" id="paid" name="paid" placeholder="Paid Amount"><br><br>
 
+
+            <input id='addNewPayment' type="button" value="Add Payment">
+
          </div>
         
 
 
-        <input type="submit" value="Submit">
 
 
         </div>

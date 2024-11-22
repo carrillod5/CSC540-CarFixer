@@ -37,12 +37,56 @@ const pool = mysql.createPool(connectionObj);
 app.use(express.static(path.join(__dirname, 'public_html')));
 app.use(express.json());
 
+//adding a new payment
+app.post('/addnewpayment', (req,res)=>{
+  console.log(req.body)
 
+  const {apptId,customerId,paymentDue,charge,paid} = req.body
+  fullyPaid = false
+  itemsPriceQuery = `
+    SELECT SUM(price) as itemPrice
+    FROM Appointments JOIN Items_Used USING (appointmentId)
+    JOIN Items USING (itemName)
+    WHERE appointmentId=${apptId};
+  `
+
+  
+  pool.query(itemsPriceQuery, (err, results) => {
+    if (err){ 
+      console.log(err)
+      return res.status(500).json({message:err});
+    }
+    itemPrice = results[0].itemPrice
+
+    totalPrice = charge+itemPrice
+    if(paid>=totalPrice){
+      fullyPaid = true;
+    }
+    insertPaymentQuery =   `
+      INSERT INTO  payments (customerId,paidAmount,fullyPaid,duePayment,totalPrice,appointmentId)
+      VALUES(${customerId},${paid},${fullyPaid},'${paymentDue}',${totalPrice},${apptId}) 
+    `
+    pool.query(insertPaymentQuery, (err,results) =>{
+      if (err){ 
+        console.log(err)
+        return res.status(500).json({message:err});
+      }
+      res.status(200).json({message:'success'});
+
+    })
+    
+
+    // res.status(200).json(results);
+  });
+
+
+
+})
 
 //getting appointments that are not finished
 app.get('/getupcomingappts', (req,res)=>{
 
-  query = `select appointments.*, CONCAT(firstname, ' ',lastname) as customerName
+  query = `select appointments.*, CONCAT(firstname, ' ',lastname) as customerName, customerId
   from appointments 
   join (cars) on carId=licensePlate 
   join (customers) on ownerid=customerid
