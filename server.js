@@ -94,45 +94,72 @@ app.post('/addnewpayment', (req,res)=>{
     WHERE appointmentId=${apptId};
   `
 
-  
-  pool.query(itemsPriceQuery, (err, results) => {
+  checkItemStockQuery = `SELECT itemName 
+  FROM ITEMS 
+  WHERE stock = 0
+  AND itemName IN (SELECT itemName FROM items_used WHERE appointmentId = ${apptId});` 
+
+  pool.query(checkItemStockQuery, (err,results) => {
     if (err){ 
       console.log(err)
       return res.status(500).json({message:err});
     }
-    itemPrice = results[0].itemPrice
+    if (results.length>0){
+      const outOfStockItems = results.map(item => item.itemName).join(', ');
+      return res.json({message:"out of stock", items: outOfStockItems })
 
-    totalPrice = charge+itemPrice
-    if(paid>=totalPrice){
-      fullyPaid = true;
     }
-    insertPaymentQuery =   `
-      INSERT INTO  payments (customerId,paidAmount,fullyPaid,duePayment,totalPrice,appointmentId)
-      VALUES(${customerId},${paid},${fullyPaid},'${paymentDue}',${totalPrice},${apptId}) 
-    `
-    pool.query(insertPaymentQuery, (err,results) =>{
+    pool.query(itemsPriceQuery, (err, results) => {
       if (err){ 
         console.log(err)
         return res.status(500).json({message:err});
       }
-      finishApptQuery = `UPDATE appointments
-      SET finished = ${true}
-      WHERE appointmentId=${apptId};`
-      pool.query(finishApptQuery, (err,results) => {
+      itemPrice = results[0].itemPrice
+  
+      totalPrice = charge+itemPrice
+      if(paid>=totalPrice){
+        fullyPaid = true;
+      }
+      insertPaymentQuery =   `
+        INSERT INTO  payments (customerId,paidAmount,fullyPaid,duePayment,totalPrice,appointmentId)
+        VALUES(${customerId},${paid},${fullyPaid},'${paymentDue}',${totalPrice},${apptId}) 
+      `
+      pool.query(insertPaymentQuery, (err,results) =>{
         if (err){ 
           console.log(err)
           return res.status(500).json({message:err});
         }
-        res.status(200).json({message:'success'});
-
-
+        finishApptQuery = `UPDATE appointments
+        SET finished = ${true}
+        WHERE appointmentId=${apptId};`
+        pool.query(finishApptQuery, (err,results) => {
+          if (err){ 
+            console.log(err)
+            return res.status(500).json({message:err});
+          }
+          updateStockQuery = `UPDATE ITEMS
+          SET stock = stock - 1
+          WHERE itemName IN (SELECT itemName FROM items_used WHERE appointmentId=${apptId})
+          `
+          pool.query(updateStockQuery, (err,results) => {
+            if (err){ 
+              console.log(err)
+              return res.status(500).json({message:err});
+            }
+            res.status(200).json({message:'success'});}
+          
+          );
+  
+  
+        })
+  
       })
-
-    })
-    
-
-    // res.status(200).json(results);
-  });
+      
+  
+      // res.status(200).json(results);
+    });
+  
+  })
 
 
 

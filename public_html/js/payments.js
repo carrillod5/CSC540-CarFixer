@@ -188,6 +188,10 @@ fetch('/getupcomingappts',{
                             alert("payment added")
                             location.reload()
                         }
+                        else if(data.message=='out of stock'){
+                            alert(data.items + " out of stock!")
+
+                        }
                         else{
                             alert('logical error')
                         }
