@@ -7,15 +7,15 @@
 }
 
 body {
-    background: url('cars.jpg') no-repeat center center fixed;
-    background-size: cover;
+    background: url('200w.gif');
+    background-size: auto;
     color: #333;
     line-height: 1.6;
 }
 
 /* Header Styling */
 .header {
-    background-color: #0073e6;
+    background-color: #50505038;
     padding: 15px 30px;
     display: flex;
     justify-content: space-between;
@@ -36,7 +36,7 @@ body {
 
 .dropbtn {
     background-color: transparent;
-    color: #fff;
+    color: #b8b8b8;
     padding: 10px 15px;
     border: 1px solid #fff;
     border-radius: 4px;
@@ -45,7 +45,7 @@ body {
 }
 
 .dropbtn:hover {
-    background-color: #005bb5;
+    background-color: #646566fa;
     color: #fff;
 }
 
@@ -53,7 +53,7 @@ body {
     display: none;
     position: absolute;
     right: 0;
-    background-color: #fff;
+    background-color: #ffffff;
     min-width: 200px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
     z-index: 1;
@@ -90,13 +90,13 @@ body {
 .page-title {
     font-size: 24px;
     margin-bottom: 20px;
-    color: #0073e6;
-    border-bottom: 2px solid #ddd;
+    color: #515152;
+    border-bottom: 2px solid #ddddddcc;
     padding-bottom: 10px;
 }
 
 .add-button {
-    background-color: #0073e6;
+    background-color: #515152;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -107,7 +107,7 @@ body {
 }
 
 .add-button:hover {
-    background-color: #005bb5;
+    background-color: #050505d7;
 }
 
 /* Table Styling */
@@ -128,7 +128,7 @@ th, td {
 }
 
 th {
-    background-color: #0073e6;
+    background-color: #515152;
     color: #fff;
     text-transform: uppercase;
     font-size: 14px;
@@ -140,7 +140,7 @@ th {
 }
 
 .dropdown-menu-btn {
-    background-color: #0073e6;
+    background-color: #515152;
     color: #fff;
     border: none;
     padding: 8px 12px;
@@ -172,7 +172,7 @@ th {
 }
 
 .dropdown-menu-content a:hover {
-    background-color: #f0f0f0;
+    background-color: #dfdfdf;
 }
 
 .dropdown-menu:hover .dropdown-menu-content {
@@ -210,7 +210,7 @@ th {
   }
   
   .close:hover {
-    color: white;
+    color: rgba(7, 7, 7, 0.849);
     cursor: pointer;
   }
 
