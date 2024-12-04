@@ -254,3 +254,18 @@ select{
     padding: 10px;
     font-size: 16px;
 }
+
+#content-container.landing-page {
+    padding: 0;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#content-container.other-pages {
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+

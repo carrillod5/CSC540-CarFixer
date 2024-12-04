@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Shop Management System</title>
     <link rel="stylesheet" type="text/css" href="css/appts.css">
-
 </head>
 <body>
 
@@ -21,7 +20,6 @@
                 <a href="#" onclick="loadPage('services')">Services</a>
                 <a href="#" onclick="loadPage('payments')">Payments</a>
                 <a href="#" onclick="loadPage('items')">Items</a>
-
             </div>
         </div>
     </div>
@@ -30,8 +28,6 @@
     <div class="content" id="content-container">
         <!-- The content will be injected here by JavaScript -->
     </div>
-
-
 
     <script>
         // Define a mapping of page names to their corresponding HTML content
@@ -43,7 +39,6 @@
             services: '/services-page.html',
             payments: '/payments-page.html',
             items: '/items-page.html'
-
         };
 
         const addButtons = {
@@ -54,42 +49,52 @@
             services: 'addService',
             payments: 'addPayment',
             items: 'addItem'
-
         };
 
         // Function to load the appropriate page content
         function loadPage(page) {
-            
             const contentContainer = document.getElementById('content-container');
-            
-            // Default to 'customers' if the page is not found
+
+            // Remove all existing classes
+            contentContainer.classList.remove('landing-page', 'other-pages');
+
+            // Handle landing page specifically
+            if (!page || page === 'landing') {
+                contentContainer.classList.add('landing-page');
+                contentContainer.innerHTML = ''; // Keep it empty
+                return;
+            }
+
+            // For other pages
+            contentContainer.classList.add('other-pages');
             const pageToLoad = pages[page] || pages.customers;
-            
+
             // Fetch the content and inject it into the container
             fetch(pageToLoad)
                 .then(response => response.text())
                 .then(data => {
                     contentContainer.innerHTML = data;
-                    injectScript(`js/${String(page)}.js`)
-                    document.getElementById(addButtons[page]).onclick = function(){
-                        openModal('modal')
+                    injectScript(`js/${String(page)}.js`);
+                    if (addButtons[page]) {
+                        const addButton = document.getElementById(addButtons[page]);
+                        if (addButton) {
+                            addButton.onclick = function () {
+                                openModal('modal');
+                            };
+                        }
                     }
-                    
                 })
                 .catch(error => {
                     contentContainer.innerHTML = `<p>Error loading page content: ${error}</p>`;
                 });
         }
 
-        // loadPage('customers');
-
-        function openModal(modal){
-            document.getElementById(modal).style.display='block'
-
+        function openModal(modal) {
+            document.getElementById(modal).style.display = 'block';
         }
-        function closeModal(modal){
-            document.getElementById(modal).style.display='none'
 
+        function closeModal(modal) {
+            document.getElementById(modal).style.display = 'none';
         }
 
         // Function to inject a script dynamically into the page
@@ -97,59 +102,11 @@
             const script = document.createElement('script');
             script.src = src;
             script.type = 'text/javascript';
-            document.body.appendChild(script);  // Or append to head if preferred
+            document.body.appendChild(script);
         }
 
-
-
+        // Load the landing page by default on page load
+        window.onload = () => loadPage('landing');
     </script>
-
-
 </body>
-
-
-
-<!-- <body>
-    <?php
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 'customers';
-    ?> 
-
-    <div class="header">
-        <div class="title">Car Shop Management System</div>
-        <div class="dropdown">
-            <button class="dropbtn">Menu ▼</button>
-            <div class="dropdown-content">
-                <a href="customers-page.html">Customers</a>
-                <a href="vehicles-page.html">Vehicles</a>
-                <a href="employees-page.html">Employees</a>
-                <a href="appointments-page.html">Appointments</a>
-                <a href="services-page.html">Services</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="content">
-        <?php
-        switch($current_page) {
-            case 'customers':
-                include 'pages/customers-page.php';
-                break;
-            case 'vehicles':
-                include 'pages/vehicles-page.php';
-                break;
-            case 'employees':
-                include 'pages/employees-page.php';
-                break;
-            case 'appointments':
-                include 'pages/appointments-page.php';
-                break;
-            case 'services':
-                include 'pages/services-page.php';
-                break;
-            default:
-                include 'pages/customers-page.php';
-        }
-        ?> 
-    </div>
-</body> -->
 </html>
